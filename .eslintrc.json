@@ -3,7 +3,7 @@
     "browser": true,
     "es2021": true
   },
-  "extends": ["plugin:react/recommended", "airbnb"],
+  "extends": ["plugin:react/recommended"],
   "parserOptions": {
     "ecmaFeatures": {
       "jsx": true
@@ -14,8 +14,11 @@
   "plugins": ["react"],
   "rules": {
     "quotes": [2, "single"],
-    "arrow-body-style": ["error", "always"],
+    "arrow-body-style": 0,
     //Line 19 might not work
-    "function-component-definition": "off"
+    "function-component-definition": "off",
+    "react/prop-types": 0
   }
 }
+
+// 0 - disable error, 1 - warning, 2 - error
