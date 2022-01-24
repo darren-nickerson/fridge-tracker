@@ -1,7 +1,7 @@
 /* eslint-disable react/function-component-definition */
 /* eslint-disable react/jsx-filename-extension */
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, Button } from 'react-native';
 
 const styles = StyleSheet.create({
   container: {
@@ -11,13 +11,16 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 });
-
-const FridgeList = () => {
+const Home = ({ navigation }) => {
   return (
     <View style={styles.container}>
-      <Text>Fridge list</Text>
+      <Text>Next page button below</Text>
+      <Button
+        title='Next page'
+        onPress={() => navigation.navigate('FridgeList')}
+      />
     </View>
   );
 };
 
-export default FridgeList;
+export default Home;

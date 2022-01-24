@@ -7,6 +7,8 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import Home from './components/Home';
 import FridgeList from './components/FridgeList';
+import AddItem from './components/AddItem';
+import Item from './components/Item';
 
 const Stack = createNativeStackNavigator();
 
@@ -19,11 +21,13 @@ export default function App() {
           component={Home}
           options={{ title: 'Welcome' }}
         />
+        <Stack.Screen name='Item' component={Item} />
         <Stack.Screen
           name='FridgeList'
           component={FridgeList}
-          options={{ title: 'helloooooooo' }}
+          options={{ title: 'Your fridge' }}
         />
+        <Stack.Screen name='AddItem' component={AddItem} />
       </Stack.Navigator>
     </NavigationContainer>
   );
