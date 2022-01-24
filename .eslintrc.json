@@ -13,6 +13,9 @@
   },
   "plugins": ["react"],
   "rules": {
-    "quotes": [2, "single"]
+    "quotes": [2, "single"],
+    "arrow-body-style": ["error", "always"],
+    //Line 19 might not work
+    "function-component-definition": "off"
   }
 }

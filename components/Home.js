@@ -12,12 +12,12 @@ const styles = StyleSheet.create({
   },
 });
 
-const FridgeList = () => {
+const Home = () => {
   return (
     <View style={styles.container}>
-      <Text>Fridge list</Text>
+      <Text>Home page</Text>
     </View>
   );
 };
 
-export default FridgeList;
+export default Home;
