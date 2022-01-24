@@ -1,5 +1,3 @@
-/* eslint-disable jsx-quotes */
-/* eslint-disable react/react-in-jsx-scope */
 /* eslint-disable react/jsx-filename-extension */
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
