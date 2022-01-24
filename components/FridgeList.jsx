@@ -44,7 +44,7 @@ const FridgeList = ({ navigation }) => {
 
   useEffect(() => {
     setItemArray(
-      itemList.filter((eachFood) => eachFood.type === selectedValue)
+      itemList.filter((eachFood) => eachFood.type === selectedValue),
     );
   }, [selectedValue]);
 
@@ -66,11 +66,8 @@ const FridgeList = ({ navigation }) => {
         renderItem={({ item }) => {
           return (
             <TouchableOpacity
-              onPress={
-                () =>
-                  // eslint-disable-next-line implicit-arrow-linebreak
-                  navigation.navigate('Item', { foodItem: item.name })
-                // eslint-disable-next-line react/jsx-curly-newline
+              onPress={() =>
+                navigation.navigate('Item', { foodItem: item.name })
               }
             >
               <Text style={styles.itemCard}>{item.name}</Text>
