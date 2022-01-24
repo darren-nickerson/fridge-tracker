@@ -19,7 +19,8 @@
     "react/prop-types": 0,
     "comma-dangle": 0,
     "jsx-quotes": 0,
-    "object-curly-newline": 0
+    "object-curly-newline": 0,
+    "react/jsx-one-expression-per-line": 0
   }
 }
 

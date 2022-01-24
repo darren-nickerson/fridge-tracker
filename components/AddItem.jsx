@@ -1,8 +1,24 @@
 import React from 'react';
-import { Text } from 'react-native-web';
+import { Text, View, Button } from 'react-native';
 
-const AddItem = () => {
-  return <Text>AddItem</Text>;
+const AddItem = ({ navigation }) => {
+  return (
+    <View>
+      <Text>AddItem</Text>
+      <Button
+        title='Return home'
+        onPress={() => {
+          navigation.navigate('Home');
+        }}
+      />
+      <Button
+        title='Your fridge'
+        onPress={() => {
+          navigation.navigate('FridgeList');
+        }}
+      />
+    </View>
+  );
 };
 
 export default AddItem;

@@ -1,8 +1,12 @@
 import React from 'react';
-import { Text } from 'react-native-web';
+import { Text, View } from 'react-native';
 
-const Item = () => {
-  return <Text>Item Page</Text>;
+const Item = ({ route }) => {
+  return (
+    <View>
+      <Text>Item Page for {route.params.foodItem}</Text>
+    </View>
+  );
 };
 
 export default Item;

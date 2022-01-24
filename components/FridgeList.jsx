@@ -1,7 +1,14 @@
 /* eslint-disable react/function-component-definition */
 /* eslint-disable react/jsx-filename-extension */
 import React, { useEffect } from 'react';
-import { StyleSheet, Text, Button, SafeAreaView, FlatList } from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  Button,
+  SafeAreaView,
+  FlatList,
+  TouchableOpacity,
+} from 'react-native';
 
 import { Picker } from '@react-native-picker/picker';
 
@@ -16,6 +23,13 @@ const styles = StyleSheet.create({
     backgroundColor: 'red',
     color: 'white',
     height: 300,
+  },
+  itemCard: {
+    padding: 50,
+    margin: 20,
+    borderStyle: 'solid',
+    borderColor: 'black',
+    borderWidth: 10,
   },
 });
 
@@ -52,7 +66,18 @@ const FridgeList = ({ navigation }) => {
         style={styles.list}
         data={itemArray}
         renderItem={({ item }) => {
-          return <Text>{item.name}</Text>;
+          return (
+            <TouchableOpacity
+              onPress={
+                () =>
+                  // eslint-disable-next-line implicit-arrow-linebreak
+                  navigation.navigate('Item', { foodItem: item.name })
+                // eslint-disable-next-line react/jsx-curly-newline
+              }
+            >
+              <Text style={styles.itemCard}>{item.name}</Text>
+            </TouchableOpacity>
+          );
         }}
         keyExtractor={(item) => item.id}
       />
