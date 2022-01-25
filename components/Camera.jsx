@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { StyleSheet, Text, View, Image, Button } from 'react-native';
 import { Camera } from 'expo-camera';
+// import { API_KEY } from 'react-native-dotenv';
+// console.log('API_KEY: ', API_KEY);
 
 export default function App() {
   /* -------------------------------------------------------------------------- */
@@ -66,7 +68,7 @@ export default function App() {
     if (cameraRef) {
       const photo = await cameraRef.current.takePictureAsync(null);
       setImage(photo.uri);
-      console.log(photo.uri);
+      // console.log(photo.uri);
     }
   };
   /* -------------------------------------------------------------------------- */
@@ -92,7 +94,7 @@ export default function App() {
                 setCamType(
                   camType === Camera.Constants.Type.back
                     ? Camera.Constants.Type.front
-                    : Camera.Constants.Type.back
+                    : Camera.Constants.Type.back,
                 );
               }}
             />
