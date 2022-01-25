@@ -18,6 +18,10 @@ const Home = ({ navigation }) => {
         onPress={() => navigation.navigate('FridgeList')}
       />
       <Button title='Add item' onPress={() => navigation.navigate('AddItem')} />
+      <Button
+        title='Testing Camera'
+        onPress={() => navigation.navigate('Camera')}
+      />
     </View>
   );
 };

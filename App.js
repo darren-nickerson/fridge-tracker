@@ -7,6 +7,7 @@ import Home from './components/Home';
 import FridgeList from './components/FridgeList';
 import AddItem from './components/AddItem';
 import Item from './components/Item';
+import Camera from './components/Camera';
 
 const Stack = createNativeStackNavigator();
 
@@ -26,6 +27,7 @@ export default function App() {
           options={{ title: 'Your fridge' }}
         />
         <Stack.Screen name='AddItem' component={AddItem} />
+        <Stack.Screen name='Camera' component={Camera} />
       </Stack.Navigator>
     </NavigationContainer>
   );
