@@ -10,27 +10,6 @@ import {
 
 import { Picker } from '@react-native-picker/picker';
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  list: {
-    backgroundColor: 'red',
-    color: 'white',
-    height: 300,
-  },
-  itemCard: {
-    padding: 50,
-    margin: 20,
-    borderStyle: 'solid',
-    borderColor: 'black',
-    borderWidth: 10,
-  },
-});
-
 const FridgeList = ({ navigation }) => {
   const [selectedValue, setSelectedValue] = React.useState('Non-Veg');
 
@@ -85,5 +64,26 @@ const FridgeList = ({ navigation }) => {
     </SafeAreaView>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  list: {
+    backgroundColor: 'red',
+    color: 'white',
+    height: 300,
+  },
+  itemCard: {
+    padding: 50,
+    margin: 20,
+    borderStyle: 'solid',
+    borderColor: 'black',
+    borderWidth: 10,
+  },
+});
 
 export default FridgeList;
