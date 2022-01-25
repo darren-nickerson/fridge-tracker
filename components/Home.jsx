@@ -14,10 +14,10 @@ const Home = ({ navigation }) => {
     <View style={styles.container}>
       <Text>Next page button below</Text>
       <Button
-        title='Look at your fridge'
+        title="Look at your fridge"
         onPress={() => navigation.navigate('FridgeList')}
       />
-      <Button title='Add item' onPress={() => navigation.navigate('AddItem')} />
+      <Button title="Add item" onPress={() => navigation.navigate('AddItem')} />
     </View>
   );
 };
