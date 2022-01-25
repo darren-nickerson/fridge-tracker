@@ -6,6 +6,58 @@ import { Camera } from 'expo-camera';
 
 export default function App() {
   /* -------------------------------------------------------------------------- */
+  /*                                  UseState                                  */
+  /* -------------------------------------------------------------------------- */
+
+  const [hasPermission, setHasPermission] = useState(null);
+  const [camType, setCamType] = useState(Camera.Constants.Type.back);
+  const [image, setImage] = useState(null);
+  //   const [useCamera, setUseCamera] = useState(false);
+  const cameraRef = useRef(null);
+
+  /* -------------------------------------------------------------------------- */
+  /*                                  Clarifai                                  */
+  /* -------------------------------------------------------------------------- */
+
+  function predict(photo) {
+    const { ClarifaiStub } = require("clarifai-nodejs-grpc");
+    const grpc = require("@grpc/grpc-js");
+    const stub = ClarifaiStub.grpc();
+    const metadata = new grpc.Metadata();
+    metadata.set("authorization", `Key 68acf5c2a23c4765b9dac7e1ed6c93cf`);
+
+    return new Promise((resolve, reject) => {
+      stub.PostModelOutputs(
+        {
+          model_id: "bd367be194cf45149e75f01d59f77ba7",
+          inputs: [
+            {
+              data: {
+                image: {
+                  url: photo,
+                },
+              },
+            },
+          ],
+        },
+        metadata,
+        (err, response) => {
+          if (err) {
+            return reject(`ERROR: ${err}`);
+          }
+
+          resolve(JSON.stringify(response.outputs[0].data.concepts));
+        }
+      );
+    });
+  }
+
+  async function main(photo) {
+    const response = await predict(photo);
+    console.log(JSON.parse(response));
+  }
+
+  /* -------------------------------------------------------------------------- */
   /*                                  Styles                                    */
   /* -------------------------------------------------------------------------- */
 
@@ -18,41 +70,32 @@ export default function App() {
     },
     buttonContainer: {
       flex: 1,
-      backgroundColor: 'transparent',
-      flexDirection: 'row',
+      backgroundColor: "transparent",
+      flexDirection: "row",
       margin: 20,
     },
     button: {
       flex: 0.1,
-      alignSelf: 'flex-end',
-      alignItems: 'center',
+      alignSelf: "flex-end",
+      alignItems: "center",
     },
     text: {
       fontSize: 18,
-      color: 'white',
+      color: "white",
     },
     pictureContainer: {
       flex: 1,
-      flexDirection: 'column',
-      justifyContent: 'center',
-      alignItems: 'center',
+      flexDirection: "column",
+      justifyContent: "center",
+      alignItems: "center",
       borderRadius: 40,
     },
     image: {
-      width: '80%',
-      height: '30%',
+      width: "80%",
+      height: "30%",
       borderRadius: 40,
     },
   });
-  /* -------------------------------------------------------------------------- */
-  /*                                  UseState                                  */
-  /* -------------------------------------------------------------------------- */
-
-  const [hasPermission, setHasPermission] = useState(null);
-  const [camType, setCamType] = useState(Camera.Constants.Type.back);
-  const [image, setImage] = useState(null);
-  //   const [useCamera, setUseCamera] = useState(false);
-  const cameraRef = useRef(null);
 
   /* -------------------------------------------------------------------------- */
   /*                                  Functions/UseEffect                       */
@@ -60,7 +103,7 @@ export default function App() {
   useEffect(() => {
     (async () => {
       const { status } = await Camera.requestCameraPermissionsAsync();
-      setHasPermission(status === 'granted');
+      setHasPermission(status === "granted");
     })();
   }, []);
 
@@ -68,7 +111,12 @@ export default function App() {
     if (cameraRef) {
       const photo = await cameraRef.current.takePictureAsync(null);
       setImage(photo.uri);
+<<<<<<< HEAD
       // console.log(photo.uri);
+=======
+      main(photo.uri);
+      console.log(photo.uri);
+>>>>>>> 9a9c091459d609dc27146e64d35c1ab023bff9ee
     }
   };
   /* -------------------------------------------------------------------------- */
@@ -88,7 +136,7 @@ export default function App() {
           <Camera ref={cameraRef} style={styles.camera} type={camType} />
           <View style={styles.buttonContainer}>
             <Button
-              title='Flip'
+              title="Flip"
               style={styles.button}
               onPress={() => {
                 setCamType(
@@ -99,13 +147,13 @@ export default function App() {
               }}
             />
             <Button
-              title='Take Picture'
+              title="Take Picture"
               onPress={() => {
                 takePicture();
               }}
             />
             <Button
-              title='Cancel'
+              title="Cancel"
               style={styles.button}
               onPress={() => {
                 setImage(null);
@@ -118,7 +166,7 @@ export default function App() {
           <Image source={{ uri: image }} style={styles.camera} />
           <View style={styles.buttonContainer}>
             <Button
-              title='ReTake'
+              title="ReTake"
               style={styles.button}
               onPress={() => {
                 setImage(null);
