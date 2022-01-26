@@ -72,10 +72,7 @@ export default function App() {
         { maxConcepts: 10, minValue: 0.4 },
       );
       setPredictions(
-        newPredictions.outputs[0].data.concepts.map((obj) => [
-          obj.name,
-          obj.value,
-        ]),
+        newPredictions.outputs[0].data.concepts.map((obj) => obj.name),
       );
     } catch (error) {
       console.log('Exception Error: ', error);
@@ -118,7 +115,7 @@ export default function App() {
           <Camera ref={cameraRef} style={styles.camera} type={camType} />
           <View style={styles.buttonContainer}>
             <Button
-              title='Flip'
+              title="Flip"
               style={styles.button}
               onPress={() => {
                 setCamType(
@@ -129,13 +126,13 @@ export default function App() {
               }}
             />
             <Button
-              title='Take Picture'
+              title="Take Picture"
               onPress={() => {
                 takePicture();
               }}
             />
             <Button
-              title='Cancel'
+              title="Cancel"
               style={styles.button}
               onPress={() => {
                 setImage(null);
@@ -148,7 +145,7 @@ export default function App() {
           <Image source={{ uri: image }} style={styles.camera} />
           <View style={styles.buttonContainer}>
             <Button
-              title='ReTake'
+              title="ReTake"
               style={styles.button}
               onPress={() => {
                 setImage(null);
