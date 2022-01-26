@@ -9,15 +9,20 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 });
+
 const Home = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <Text>Next page button below</Text>
       <Button
-        title='Look at your fridge'
-        onPress={() => navigation.navigate('FridgeList')}
+        title="Look at your fridge"
+        onPress={() => navigation.navigate('Fridge List')}
       />
-      <Button title='Add item' onPress={() => navigation.navigate('AddItem')} />
+      <Button
+        title="Add item"
+        onPress={() => navigation.navigate('Add Item')}
+      />
+      <Button title="Create a notification" />
     </View>
   );
 };

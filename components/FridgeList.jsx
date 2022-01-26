@@ -2,7 +2,6 @@ import React, { useEffect } from 'react';
 import {
   StyleSheet,
   Text,
-  Button,
   SafeAreaView,
   FlatList,
   TouchableOpacity,
@@ -35,9 +34,9 @@ const FridgeList = ({ navigation }) => {
         selectedValue={selectedValue}
         onValueChange={(foodValue) => setSelectedValue(foodValue)}
       >
-        <Picker.Item label='Non-Veg' value='Non-Veg' />
-        <Picker.Item label='Vegetarian' value='Vegetarian' />
-        <Picker.Item label='Vegan' value='Vegan' />
+        <Picker.Item label="Non-Veg" value="Non-Veg" />
+        <Picker.Item label="Vegetarian" value="Vegetarian" />
+        <Picker.Item label="Vegan" value="Vegan" />
       </Picker>
       <FlatList
         style={styles.list}
@@ -54,12 +53,6 @@ const FridgeList = ({ navigation }) => {
           );
         }}
         keyExtractor={(item) => item.id}
-      />
-      <Button
-        title='Return home'
-        onPress={() => {
-          navigation.navigate('Home');
-        }}
       />
     </SafeAreaView>
   );

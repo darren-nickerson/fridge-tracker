@@ -6,15 +6,9 @@ const AddItem = ({ navigation }) => {
     <View>
       <Text>AddItem</Text>
       <Button
-        title='Return home'
+        title="Your fridge"
         onPress={() => {
-          navigation.navigate('Home');
-        }}
-      />
-      <Button
-        title='Your fridge'
-        onPress={() => {
-          navigation.navigate('FridgeList');
+          navigation.navigate('Fridge List');
         }}
       />
     </View>
