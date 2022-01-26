@@ -9,32 +9,33 @@ import {
   MaterialIcons,
   Ionicons,
 } from '@expo/vector-icons';
-import FridgeList from './components/FridgeList';
 import AddItem from './components/AddItem';
 import Home from './components/Home';
+import FridgeNavigator from './navigation/FridgeNavigator';
 
 const Tab = createBottomTabNavigator();
 
 function MyTabs() {
   return (
     <Tab.Navigator
-      initialRouteName="FridgeList"
+      initialRouteName="Fridge List"
       screenOptions={{
         tabBarActiveTintColor: '#e91e63',
       }}
     >
       <Tab.Screen
-        name="FridgeList"
-        component={FridgeList}
+        name="Fridge"
+        component={FridgeNavigator}
         options={{
           tabBarLabel: 'Your fridge',
           tabBarIcon: ({ color, size }) => (
             <MaterialCommunityIcons name="fridge" color={color} size={size} />
           ),
+          headerShown: false,
         }}
       />
       <Tab.Screen
-        name="AddItem"
+        name="Add Item"
         component={AddItem}
         options={{
           tabBarLabel: 'Add Item',
@@ -53,7 +54,6 @@ function MyTabs() {
           ),
         }}
       />
-
       <Tab.Screen
         name="Recipes"
         component={Home}

@@ -2,7 +2,6 @@ import React, { useEffect } from 'react';
 import {
   StyleSheet,
   Text,
-  Button,
   SafeAreaView,
   FlatList,
   TouchableOpacity,
@@ -54,12 +53,6 @@ const FridgeList = ({ navigation }) => {
           );
         }}
         keyExtractor={(item) => item.id}
-      />
-      <Button
-        title="Return home"
-        onPress={() => {
-          navigation.navigate('Home');
-        }}
       />
     </SafeAreaView>
   );

@@ -15,9 +15,12 @@ const Home = ({ navigation }) => {
       <Text>Next page button below</Text>
       <Button
         title="Look at your fridge"
-        onPress={() => navigation.navigate('FridgeList')}
+        onPress={() => navigation.navigate('Fridge List')}
       />
-      <Button title="Add item" onPress={() => navigation.navigate('AddItem')} />
+      <Button
+        title="Add item"
+        onPress={() => navigation.navigate('Add Item')}
+      />
     </View>
   );
 };
