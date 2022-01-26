@@ -71,7 +71,6 @@ export default function App() {
         { base64: source },
         { maxConcepts: 10, minValue: 0.4 },
       );
-      // console.log(newPredictions.outputs[0].data.concepts);
       setPredictions(
         newPredictions.outputs[0].data.concepts.map((obj) => [
           obj.name,
