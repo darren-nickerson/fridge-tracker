@@ -9,6 +9,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 });
+
 const Home = ({ navigation }) => {
   return (
     <View style={styles.container}>
@@ -21,6 +22,7 @@ const Home = ({ navigation }) => {
         title="Add item"
         onPress={() => navigation.navigate('Add Item')}
       />
+      <Button title="Create a notification" />
     </View>
   );
 };
