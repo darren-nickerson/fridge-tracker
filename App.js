@@ -9,6 +9,7 @@ import {
   MaterialIcons,
   Ionicons,
 } from '@expo/vector-icons';
+import Camera from './components/Camera';
 import AddItem from './components/AddItem';
 import Home from './components/Home';
 import FridgeNavigator from './navigation/FridgeNavigator';
@@ -46,7 +47,7 @@ function MyTabs() {
       />
       <Tab.Screen
         name="Camera"
-        component={Home}
+        component={Camera}
         options={{
           tabBarLabel: 'Camera',
           tabBarIcon: ({ color, size }) => (

@@ -22,7 +22,11 @@ const Home = ({ navigation }) => {
         title="Add item"
         onPress={() => navigation.navigate('Add Item')}
       />
-      <Button title="Create a notification" />
+      <Button title="Add item" onPress={() => navigation.navigate('AddItem')} />
+      <Button
+        title="Testing Camera"
+        onPress={() => navigation.navigate('Camera')}
+      />
     </View>
   );
 };
