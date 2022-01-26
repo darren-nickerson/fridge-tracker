@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { StyleSheet, Text, View, Image, Button } from 'react-native';
 import { Camera } from 'expo-camera';
+import * as Clarifai from 'clarifai';
+import { CLARIFAI_API_KEY } from 'react-native-dotenv';
 
 export default function App() {
   /* -------------------------------------------------------------------------- */
@@ -10,6 +12,7 @@ export default function App() {
   const [hasPermission, setHasPermission] = useState(null);
   const [camType, setCamType] = useState(Camera.Constants.Type.back);
   const [image, setImage] = useState(null);
+  const [predictions, setPredictions] = useState(null);
   const cameraRef = useRef(null);
 
   /* -------------------------------------------------------------------------- */
@@ -53,8 +56,32 @@ export default function App() {
   });
 
   /* -------------------------------------------------------------------------- */
+  /*                                  Clarifai                                  */
+  /* -------------------------------------------------------------------------- */
+
+  const clarifaiApp = new Clarifai.App({
+    apiKey: CLARIFAI_API_KEY,
+  });
+  process.nextTick = setImmediate;
+
+  const clarifaiDetectObjectsAsync = async (source) => {
+    try {
+      const newPredictions = await clarifaiApp.models.predict(
+        { id: Clarifai.FOOD_MODEL },
+        { base64: source },
+        { maxConcepts: 10, minValue: 0.4 },
+      );
+      console.log(newPredictions.outputs[0].data.concepts);
+      setPredictions(newPredictions.outputs[0].data.concepts);
+    } catch (error) {
+      console.log('Exception Error: ', error);
+    }
+  };
+
+  /* -------------------------------------------------------------------------- */
   /*                                  Functions/UseEffect                       */
   /* -------------------------------------------------------------------------- */
+
   useEffect(() => {
     (async () => {
       const { status } = await Camera.requestCameraPermissionsAsync();
@@ -64,10 +91,9 @@ export default function App() {
 
   const takePicture = async () => {
     if (cameraRef) {
-      const photo = await cameraRef.current.takePictureAsync(null);
+      const photo = await cameraRef.current.takePictureAsync({ base64: true });
       setImage(photo.uri);
-      // main(photo.uri)
-      // console.log(photo.uri);
+      clarifaiDetectObjectsAsync(photo.base64);
     }
   };
   /* -------------------------------------------------------------------------- */
