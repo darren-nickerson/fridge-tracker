@@ -71,8 +71,13 @@ export default function App() {
         { base64: source },
         { maxConcepts: 10, minValue: 0.4 },
       );
-      console.log(newPredictions.outputs[0].data.concepts);
-      setPredictions(newPredictions.outputs[0].data.concepts);
+      // console.log(newPredictions.outputs[0].data.concepts);
+      setPredictions(
+        newPredictions.outputs[0].data.concepts.map((obj) => [
+          obj.name,
+          obj.value,
+        ]),
+      );
     } catch (error) {
       console.log('Exception Error: ', error);
     }
@@ -96,6 +101,7 @@ export default function App() {
       clarifaiDetectObjectsAsync(photo.base64);
     }
   };
+  console.log(predictions);
   /* -------------------------------------------------------------------------- */
   /*                                  Component                                  */
   /* -------------------------------------------------------------------------- */
