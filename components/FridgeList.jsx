@@ -1,21 +1,12 @@
 /* -------------------------------------------------------------------------- */
 /*                                    Fridge List Branch                       */
 /* -------------------------------------------------------------------------- */
-import { MaterialIcons } from '@expo/vector-icons';
 import React, { useEffect, useState } from 'react';
-import {
-  StyleSheet,
-  Text,
-  SafeAreaView,
-  FlatList,
-  TouchableOpacity,
-  View,
-  Button,
-} from 'react-native';
+import { StyleSheet, Text, SafeAreaView } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
-import DateTimePickerModal from 'react-native-modal-datetime-picker';
+import ItemCard from './ItemCard';
 
-const FridgeList = ({ navigation }) => {
+const FridgeList = () => {
   const fridgeItems = [
     {
       id: '134',
@@ -51,31 +42,12 @@ const FridgeList = ({ navigation }) => {
     },
   ];
   const [selectedValue, setSelectedValue] = useState('Non-Veg');
-  const [itemArray, setItemArray] = useState(null);
-  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
-  const [date, setDate] = useState(null);
-  console.log(date);
-  const showDatePicker = () => {
-    setDatePickerVisibility(true);
-  };
-
-  const hideDatePicker = () => {
-    setDatePickerVisibility(false);
-  };
-
-  const handleConfirm = (newDate) => {
-    console.log('newDate: ', newDate);
-    // console.warn('Date: ', date);
-    setDate(newDate);
-    hideDatePicker();
-  };
-
+  const [itemArray, setItemArray] = useState(fridgeItems);
   useEffect(() => {
     setItemArray(
       fridgeItems.filter((eachFood) => eachFood.diet === selectedValue),
     );
   }, [selectedValue]);
-
   return (
     <SafeAreaView style={styles.container}>
       <Text>Here is your fridge!</Text>
@@ -88,43 +60,9 @@ const FridgeList = ({ navigation }) => {
         <Picker.Item label="Vegetarian" value="Vegetarian" />
         <Picker.Item label="Vegan" value="Vegan" />
       </Picker>
-      <FlatList
-        style={styles.list}
-        data={itemArray}
-        renderItem={({ item }) => {
-          return (
-            <View style={styles.itemCard}>
-              <TouchableOpacity
-                onPress={() =>
-                  navigation.navigate('Item', { foodItem: item.name })
-                }
-              >
-                <Text
-                  style={{
-                    fontSize: 20,
-                    fontWeight: 'bold',
-                    alignSelf: 'center',
-                  }}
-                >
-                  {item.name}
-                </Text>
-              </TouchableOpacity>
-              <Text>Quantity: {item.quantity}</Text>
-              <Button title={item.expiry} onPress={showDatePicker} />
-              <DateTimePickerModal
-                isVisible={isDatePickerVisible}
-                mode="date"
-                onConfirm={handleConfirm}
-                onCancel={hideDatePicker}
-              />
-              <TouchableOpacity style={{ alignSelf: 'center' }}>
-                <MaterialIcons name="delete" size={24} color="red" />
-              </TouchableOpacity>
-            </View>
-          );
-        }}
-        keyExtractor={(item) => item.id}
-      />
+      {itemArray.map((item) => {
+        return <ItemCard key={item.id} item={item} />;
+      })}
     </SafeAreaView>
   );
 };
@@ -132,21 +70,9 @@ const FridgeList = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#ffffff',
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  list: {
-    flexWrap: 'wrap',
-    backgroundColor: 'grey',
-    color: 'white',
-    height: 300,
-    width: '100%',
-  },
-  itemCard: {
-    borderStyle: 'solid',
-    borderColor: 'black',
-    borderWidth: 5,
   },
 });
 
