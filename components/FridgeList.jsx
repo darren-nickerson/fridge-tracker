@@ -1,32 +1,78 @@
 /* -------------------------------------------------------------------------- */
-/*                                    Fridgelist Branch                       */
+/*                                    Fridge List Branch                       */
 /* -------------------------------------------------------------------------- */
-
-import React, { useEffect } from 'react';
+import { MaterialIcons } from '@expo/vector-icons';
+import React, { useEffect, useState } from 'react';
 import {
   StyleSheet,
   Text,
   SafeAreaView,
   FlatList,
   TouchableOpacity,
+  View,
+  Button,
 } from 'react-native';
-
 import { Picker } from '@react-native-picker/picker';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
 
 const FridgeList = ({ navigation }) => {
-  const [selectedValue, setSelectedValue] = React.useState('Non-Veg');
-
-  const itemList = [
-    { name: 'Tomato', type: 'Vegetarian', id: '134' },
-    { name: 'Steak', type: 'Non-Veg', id: '130' },
-    { name: 'Chocolate', type: 'Vegetarian', id: '154' },
-    { name: 'Biscuits', type: 'Vegan', id: '133' },
+  const fridgeItems = [
+    {
+      id: '134',
+      category: 'Vegetable',
+      name: 'Tomato',
+      diet: 'Vegetarian',
+      quantity: 4,
+      expiry: '01/01/2022',
+    },
+    {
+      id: '130',
+      category: 'Meat',
+      name: 'Steak',
+      diet: 'Non-Veg',
+      quantity: 1,
+      expiry: '02/01/2022',
+    },
+    {
+      id: '154',
+      category: 'Dairy',
+      name: 'Chocolate',
+      diet: 'Vegetarian',
+      quantity: 2,
+      expiry: '03/01/2022',
+    },
+    {
+      id: '133',
+      category: 'Dairy',
+      name: 'something',
+      diet: 'Vegan',
+      quantity: 10,
+      expiry: '04/01/2022',
+    },
   ];
-  const [itemArray, setItemArray] = React.useState(itemList);
+  const [selectedValue, setSelectedValue] = useState('Non-Veg');
+  const [itemArray, setItemArray] = useState(null);
+  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+  const [date, setDate] = useState(null);
+  console.log(date);
+  const showDatePicker = () => {
+    setDatePickerVisibility(true);
+  };
+
+  const hideDatePicker = () => {
+    setDatePickerVisibility(false);
+  };
+
+  const handleConfirm = (newDate) => {
+    console.log('newDate: ', newDate);
+    // console.warn('Date: ', date);
+    setDate(newDate);
+    hideDatePicker();
+  };
 
   useEffect(() => {
     setItemArray(
-      itemList.filter((eachFood) => eachFood.type === selectedValue),
+      fridgeItems.filter((eachFood) => eachFood.diet === selectedValue),
     );
   }, [selectedValue]);
 
@@ -34,7 +80,7 @@ const FridgeList = ({ navigation }) => {
     <SafeAreaView style={styles.container}>
       <Text>Here is your fridge!</Text>
       <Picker
-        style={{ height: 100, width: 300 }}
+        style={{ height: 200, width: 300 }}
         selectedValue={selectedValue}
         onValueChange={(foodValue) => setSelectedValue(foodValue)}
       >
@@ -47,13 +93,34 @@ const FridgeList = ({ navigation }) => {
         data={itemArray}
         renderItem={({ item }) => {
           return (
-            <TouchableOpacity
-              onPress={() =>
-                navigation.navigate('Item', { foodItem: item.name })
-              }
-            >
-              <Text style={styles.itemCard}>{item.name}</Text>
-            </TouchableOpacity>
+            <View style={styles.itemCard}>
+              <TouchableOpacity
+                onPress={() =>
+                  navigation.navigate('Item', { foodItem: item.name })
+                }
+              >
+                <Text
+                  style={{
+                    fontSize: 20,
+                    fontWeight: 'bold',
+                    alignSelf: 'center',
+                  }}
+                >
+                  {item.name}
+                </Text>
+              </TouchableOpacity>
+              <Text>Quantity: {item.quantity}</Text>
+              <Button title={item.expiry} onPress={showDatePicker} />
+              <DateTimePickerModal
+                isVisible={isDatePickerVisible}
+                mode="date"
+                onConfirm={handleConfirm}
+                onCancel={hideDatePicker}
+              />
+              <TouchableOpacity style={{ alignSelf: 'center' }}>
+                <MaterialIcons name="delete" size={24} color="red" />
+              </TouchableOpacity>
+            </View>
           );
         }}
         keyExtractor={(item) => item.id}
@@ -70,16 +137,16 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   list: {
-    backgroundColor: 'red',
+    flexWrap: 'wrap',
+    backgroundColor: 'grey',
     color: 'white',
     height: 300,
+    width: '100%',
   },
   itemCard: {
-    padding: 50,
-    margin: 20,
     borderStyle: 'solid',
     borderColor: 'black',
-    borderWidth: 10,
+    borderWidth: 5,
   },
 });
 
