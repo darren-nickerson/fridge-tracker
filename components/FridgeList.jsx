@@ -1,51 +1,41 @@
 /* -------------------------------------------------------------------------- */
 /*                                    Fridge List Branch                       */
 /* -------------------------------------------------------------------------- */
+import {
+  getDocs,
+  collection,
+  addDoc,
+  deleteDoc,
+  doc,
+} from 'firebase/firestore';
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, SafeAreaView } from 'react-native';
+import { StyleSheet, Text, SafeAreaView, ScrollView } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import ItemCard from './ItemCard';
+import { db } from '../core/Config';
 
 const FridgeList = () => {
-  const fridgeItems = [
-    {
-      id: '134',
-      category: 'Vegetable',
-      name: 'Tomato',
-      diet: 'Vegetarian',
-      quantity: 4,
-      expiry: '01/01/2022',
-    },
-    {
-      id: '130',
-      category: 'Meat',
-      name: 'Steak',
-      diet: 'Non-Veg',
-      quantity: 1,
-      expiry: '02/01/2022',
-    },
-    {
-      id: '154',
-      category: 'Dairy',
-      name: 'Chocolate',
-      diet: 'Vegetarian',
-      quantity: 2,
-      expiry: '03/01/2022',
-    },
-    {
-      id: '133',
-      category: 'Dairy',
-      name: 'something',
-      diet: 'Vegan',
-      quantity: 10,
-      expiry: '04/01/2022',
-    },
-  ];
-  const [selectedValue, setSelectedValue] = useState('Non-Veg');
-  const [itemArray, setItemArray] = useState(fridgeItems);
+  const [selectedValue, setSelectedValue] = useState('Any');
+  const [itemArray, setItemArray] = useState([]);
+
+  const getFoodItems = () => {
+    const colRef = collection(db, 'FoodItems');
+    return getDocs(colRef)
+      .then((snapshot) => {
+        const foodItems = [];
+        snapshot.docs.forEach((doc) => {
+          foodItems.push({ ...doc.data(), id: doc.id });
+        });
+        return foodItems;
+      })
+      .catch((err) => {
+        console.log(err.message);
+      });
+  };
+
   useEffect(() => {
-    setItemArray(
-      fridgeItems.filter((eachFood) => eachFood.diet === selectedValue),
+    getFoodItems().then((result) =>
+      setItemArray(result.filter((obj) => obj.diet === selectedValue)),
     );
   }, [selectedValue]);
   return (
@@ -56,13 +46,15 @@ const FridgeList = () => {
         selectedValue={selectedValue}
         onValueChange={(foodValue) => setSelectedValue(foodValue)}
       >
-        <Picker.Item label="Non-Veg" value="Non-Veg" />
-        <Picker.Item label="Vegetarian" value="Vegetarian" />
-        <Picker.Item label="Vegan" value="Vegan" />
+        <Picker.Item label="veg" value="veg" />
+        <Picker.Item label="Veg" value="Veg" />
+        <Picker.Item label="Any" value="Any" />
       </Picker>
-      {itemArray.map((item) => {
-        return <ItemCard key={item.id} item={item} />;
-      })}
+      <ScrollView>
+        {itemArray.map((item) => {
+          return <ItemCard key={item.id} item={item} />;
+        })}
+      </ScrollView>
     </SafeAreaView>
   );
 };

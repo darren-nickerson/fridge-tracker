@@ -26,7 +26,17 @@ const ItemCard = ({ item }) => {
   };
 
   const handleQuantityPress = (num) => {
+    if (num <= 0) {
+      // delete function
+    }
     setQuantity((curr) => (curr += num));
+  };
+
+  const handleDelete = (e) => {
+    console.log(e);
+    console.log('hello');
+
+    // delete function
   };
 
   return (
@@ -38,7 +48,7 @@ const ItemCard = ({ item }) => {
           alignSelf: 'center',
         }}
       >
-        {item.name}
+        {item.food_item}
       </Text>
       <TouchableOpacity
         onPress={() => handleQuantityPress(1)}
@@ -63,7 +73,10 @@ const ItemCard = ({ item }) => {
         onConfirm={handleConfirm}
         onCancel={hideDatePicker}
       />
-      <TouchableOpacity style={{ alignSelf: 'center' }}>
+      <TouchableOpacity
+        onPress={() => handleDelete()}
+        style={{ alignSelf: 'center' }}
+      >
         <MaterialIcons name="delete" size={24} color="red" />
       </TouchableOpacity>
     </SafeAreaView>
