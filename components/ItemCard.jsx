@@ -6,11 +6,13 @@ import React, { useState } from 'react';
 import { Text, SafeAreaView, TouchableOpacity, Button } from 'react-native';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import moment from 'moment';
+import { doc, deleteDoc, updateDoc } from 'firebase/firestore';
+import { db } from '../core/Config';
 
-const ItemCard = ({ item }) => {
+const ItemCard = ({ item, setItemArray }) => {
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
-  const [expiryDate, setExpiryDate] = useState(item.expiry);
-  const [quantity, setQuantity] = useState(item.quantity);
+  const [expiryDate, setExpiryDate] = useState(item.expiration_date);
+  const [quantity, setQuantity] = useState(Number(item.quantity));
 
   const showDatePicker = () => {
     setDatePickerVisibility(true);
@@ -25,18 +27,22 @@ const ItemCard = ({ item }) => {
     hideDatePicker();
   };
 
-  const handleQuantityPress = (num) => {
-    if (num <= 0) {
-      // delete function
-    }
-    setQuantity((curr) => (curr += num));
+  const handleDelete = () => {
+    setItemArray((curr) => {
+      return curr.filter((obj) => obj.id !== item.id);
+    });
+    const docRef = doc(db, 'FoodItems', item.id);
+
+    deleteDoc(docRef);
   };
-
-  const handleDelete = (e) => {
-    console.log(e);
-    console.log('hello');
-
-    // delete function
+  console.log(expiryDate);
+  const handleQuantityPress = (num) => {
+    setQuantity((curr) => (curr += num));
+    if (quantity < 1) {
+      handleDelete();
+    }
+    const docRef = doc(db, 'FoodItems', item.id);
+    updateDoc(docRef, { quantity: quantity + num });
   };
 
   return (

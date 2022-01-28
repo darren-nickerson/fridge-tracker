@@ -15,7 +15,7 @@ import ItemCard from './ItemCard';
 import { db } from '../core/Config';
 
 const FridgeList = () => {
-  const [selectedValue, setSelectedValue] = useState('Any');
+  const [selectedValue, setSelectedValue] = useState('meat');
   const [itemArray, setItemArray] = useState([]);
 
   const getFoodItems = () => {
@@ -46,13 +46,20 @@ const FridgeList = () => {
         selectedValue={selectedValue}
         onValueChange={(foodValue) => setSelectedValue(foodValue)}
       >
-        <Picker.Item label="veg" value="veg" />
-        <Picker.Item label="Veg" value="Veg" />
-        <Picker.Item label="Any" value="Any" />
+        <Picker.Item label="vegan" value="vegan" />
+        <Picker.Item label="meat" value="meat" />
+        <Picker.Item label="vegetarian" value="vegetarian" />
       </Picker>
       <ScrollView>
         {itemArray.map((item) => {
-          return <ItemCard key={item.id} item={item} />;
+          return (
+            <ItemCard
+              key={item.id}
+              item={item}
+              setItemArray={setItemArray}
+              itemArray={itemArray}
+            />
+          );
         })}
       </ScrollView>
     </SafeAreaView>
