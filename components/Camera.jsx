@@ -1,28 +1,17 @@
-/* -------------------------------------------------------------------------- */
-/*                                  Camera Branch                             */
-/* -------------------------------------------------------------------------- */
-
 import React, { useState, useEffect, useRef } from 'react';
 import { StyleSheet, Text, View, Image, Button } from 'react-native';
 import { Camera } from 'expo-camera';
 import * as Clarifai from 'clarifai';
-import { CLARIFAI_API_KEY } from 'react-native-dotenv';
+const CLARIFAI_API_KEY = require('../api');
+import { useIsFocused } from '@react-navigation/native';
 
 export default function App() {
-  /* -------------------------------------------------------------------------- */
-  /*                                  UseState                                  */
-  /* -------------------------------------------------------------------------- */
-
   const [hasPermission, setHasPermission] = useState(null);
   const [camType, setCamType] = useState(Camera.Constants.Type.back);
   const [image, setImage] = useState(null);
   const [predictions, setPredictions] = useState(null);
   const cameraRef = useRef(null);
   const [scanned, setScanned] = useState(false);
-
-  /* -------------------------------------------------------------------------- */
-  /*                                  Styles                                    */
-  /* -------------------------------------------------------------------------- */
 
   const styles = StyleSheet.create({
     container: {
@@ -60,10 +49,6 @@ export default function App() {
     },
   });
 
-  /* -------------------------------------------------------------------------- */
-  /*                                  Clarifai                                  */
-  /* -------------------------------------------------------------------------- */
-
   const clarifaiApp = new Clarifai.App({
     apiKey: CLARIFAI_API_KEY,
   });
@@ -86,12 +71,8 @@ export default function App() {
       console.log('Exception Error: ', error);
     }
   };
-
+  const isFocused = useIsFocused();
   console.log(predictions);
-
-  /* -------------------------------------------------------------------------- */
-  /*                                  Functions/UseEffect                       */
-  /* -------------------------------------------------------------------------- */
 
   useEffect(() => {
     (async () => {
@@ -120,9 +101,6 @@ export default function App() {
       clarifaiDetectObjectsAsync(photo.base64);
     }
   };
-  /* -------------------------------------------------------------------------- */
-  /*                                  Component                                  */
-  /* -------------------------------------------------------------------------- */
 
   if (hasPermission === null) {
     return <View />;
@@ -134,12 +112,15 @@ export default function App() {
     <View style={styles.container}>
       {image === null ? (
         <View style={styles.container}>
-          <Camera
-            onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
-            ref={cameraRef}
-            style={styles.camera}
-            type={camType}
-          />
+          {isFocused && (
+            <Camera
+              onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
+              ref={cameraRef}
+              style={styles.camera}
+              type={camType}
+            />
+          )}
+
           {scanned && (
             <Button
               style={styles.button}
