@@ -4,9 +4,9 @@
 import {
   getDocs,
   collection,
-  addDoc,
-  deleteDoc,
-  doc,
+  // addDoc,
+  // deleteDoc,
+  // doc,
 } from 'firebase/firestore';
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, SafeAreaView, ScrollView } from 'react-native';
