@@ -3,7 +3,6 @@ import { StyleSheet, Text, View, Image, Button } from 'react-native';
 import { Camera } from 'expo-camera';
 import * as Clarifai from 'clarifai';
 import { CLARIFAI_API_KEY } from 'react-native-dotenv';
-
 export default function App() {
   /* -------------------------------------------------------------------------- */
   /*                                  UseState                                  */
@@ -14,6 +13,7 @@ export default function App() {
   const [image, setImage] = useState(null);
   const [predictions, setPredictions] = useState(null);
   const cameraRef = useRef(null);
+  const [scanned, setScanned] = useState(false);
 
   /* -------------------------------------------------------------------------- */
   /*                                  Styles                                    */
@@ -82,6 +82,8 @@ export default function App() {
     }
   };
 
+  console.log(predictions);
+
   /* -------------------------------------------------------------------------- */
   /*                                  Functions/UseEffect                       */
   /* -------------------------------------------------------------------------- */
@@ -93,6 +95,19 @@ export default function App() {
     })();
   }, []);
 
+  const handleBarCodeScanned = ({ data }) => {
+    setScanned(true);
+    fetch(`https://en.openfoodfacts.org/api/v0/product/${data}`)
+      .then((response) => response.json())
+      .then((json) => {
+        alert(`${json.product.product_name_en}`);
+        console.log(json.product.product_name_en);
+      })
+      .catch((err) => {
+        alert('item not found!');
+      });
+  };
+
   const takePicture = async () => {
     if (cameraRef) {
       const photo = await cameraRef.current.takePictureAsync({ base64: true });
@@ -100,7 +115,6 @@ export default function App() {
       clarifaiDetectObjectsAsync(photo.base64);
     }
   };
-  console.log(predictions);
   /* -------------------------------------------------------------------------- */
   /*                                  Component                                  */
   /* -------------------------------------------------------------------------- */
@@ -115,10 +129,23 @@ export default function App() {
     <View style={styles.container}>
       {image === null ? (
         <View style={styles.container}>
-          <Camera ref={cameraRef} style={styles.camera} type={camType} />
+          <Camera
+            onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
+            ref={cameraRef}
+            style={styles.camera}
+            type={camType}
+          />
+          {scanned && (
+            <Button
+              style={styles.button}
+              color="#841584"
+              title={'Scan Again'}
+              onPress={() => setScanned(false)}
+            />
+          )}
           <View style={styles.buttonContainer}>
             <Button
-              title='Flip'
+              title="Flip"
               style={styles.button}
               onPress={() => {
                 setCamType(
@@ -129,13 +156,13 @@ export default function App() {
               }}
             />
             <Button
-              title='Take Picture'
+              title="Take Picture"
               onPress={() => {
                 takePicture();
               }}
             />
             <Button
-              title='Cancel'
+              title="Cancel"
               style={styles.button}
               onPress={() => {
                 setImage(null);
@@ -148,7 +175,7 @@ export default function App() {
           <Image source={{ uri: image }} style={styles.camera} />
           <View style={styles.buttonContainer}>
             <Button
-              title='ReTake'
+              title="ReTake"
               style={styles.button}
               onPress={() => {
                 setImage(null);
