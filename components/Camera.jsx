@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, Image, Button } from 'react-native';
 import { Camera } from 'expo-camera';
 import * as Clarifai from 'clarifai';
 import { CLARIFAI_API_KEY } from 'react-native-dotenv';
+
 export default function App() {
   /* -------------------------------------------------------------------------- */
   /*                                  UseState                                  */
@@ -103,7 +104,7 @@ export default function App() {
         alert(`${json.product.product_name_en}`);
         console.log(json.product.product_name_en);
       })
-      .catch((err) => {
+      .catch(() => {
         alert('item not found!');
       });
   };
@@ -139,7 +140,7 @@ export default function App() {
             <Button
               style={styles.button}
               color="#841584"
-              title={'Scan Again'}
+              title="Scan Again"
               onPress={() => setScanned(false)}
             />
           )}
