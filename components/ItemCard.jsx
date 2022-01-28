@@ -3,14 +3,7 @@
 /* -------------------------------------------------------------------------- */
 import { MaterialIcons } from '@expo/vector-icons';
 import React, { useState } from 'react';
-import {
-  StyleSheet,
-  Text,
-  SafeAreaView,
-  TouchableOpacity,
-  View,
-  Button,
-} from 'react-native';
+import { Text, SafeAreaView, TouchableOpacity, Button } from 'react-native';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import moment from 'moment';
 
@@ -76,25 +69,5 @@ const ItemCard = ({ item }) => {
     </SafeAreaView>
   );
 };
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  list: {
-    flexWrap: 'wrap',
-    backgroundColor: 'grey',
-    color: 'white',
-    height: 300,
-    width: '100%',
-  },
-  itemCard: {
-    borderStyle: 'solid',
-    borderColor: 'black',
-    borderWidth: 5,
-  },
-});
 
 export default ItemCard;
