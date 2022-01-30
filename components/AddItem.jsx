@@ -13,6 +13,7 @@ import {
   SafeAreaView,
   Text,
 } from 'react-native';
+import { Picker } from '@react-native-picker/picker';
 import { Formik } from 'formik';
 
 import { db } from '../core/Config';
@@ -22,9 +23,9 @@ export default function AddItemFormik() {
     <Formik
       initialValues={{
         category: 'dairy',
-        expiration_date: 'this has not worked',
+        expiration_date: moment().format('MMM Do YY'),
         food_item: 'chicken',
-        quantity: '10',
+        quantity: '1',
         user_id: '1',
       }}
       onSubmit={(values) => {
@@ -49,6 +50,8 @@ const AddItem = (props) => {
   const { setFieldValue, handleSubmit, handleChange, values } = props;
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [expiryDate, setExpiryDate] = useState(new Date());
+  const [selectedValue, setSelectedValue] = useState('all');
+  const foodGroups = ['fruit', 'vegetables', 'meat', 'dairy', 'grains', 'fish'];
 
   const showDatePicker = () => {
     setDatePickerVisibility(true);
@@ -56,6 +59,11 @@ const AddItem = (props) => {
 
   const hideDatePicker = () => {
     setDatePickerVisibility(false);
+  };
+
+  const handleFoodGroupPress = (foodGroupsName) => {
+    setFieldValue('category', foodGroupsName);
+    setSelectedValue(foodGroupsName);
   };
 
   const handleConfirm = (newDate) => {
@@ -80,12 +88,18 @@ const AddItem = (props) => {
                 onChangeText={handleChange('food_item')}
                 value={values.food_item}
               />
-              <TextInput
-                style={styles.input}
-                placeholder="Add Category"
-                onChangeText={handleChange('category')}
-                value={values.category}
-              />
+         
+
+              <Picker
+                style={{ height: 50, width: '100%', paddinghorizontal: 20 }}
+                selectedValue={selectedValue}
+                onValueChange={handleFoodGroupPress}
+              >
+                {foodGroups.map((item) => {
+                  return <Picker.Item label={item} value={item} />;
+                })}
+              </Picker>
+
               <Text style={styles.input} onPress={showDatePicker}>
                 {moment(expiryDate).format('MMM Do YY')}
               </Text>

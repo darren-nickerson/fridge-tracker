@@ -11,7 +11,8 @@ import { db } from '../core/Config';
 const FridgeList = () => {
   const [selectedValue, setSelectedValue] = useState('all');
   const [itemArray, setItemArray] = useState([]);
-  console.log(itemArray);
+  const foodGroups = ['fruit', 'vegetables', 'meat', 'dairy', 'grains', 'fish'];
+
   const getFoodItems = () => {
     const colRef = collection(db, 'FoodItems');
     return getDocs(colRef)
@@ -46,10 +47,9 @@ const FridgeList = () => {
           onValueChange={(foodValue) => setSelectedValue(foodValue)}
         >
           <Picker.Item label="all" value="all" />
-          <Picker.Item label="fruit" value="fruit" />
-          <Picker.Item label="meat" value="meat" />
-          <Picker.Item label="vegetable" value="vegetable" />
-          <Picker.Item label="dairy" value="dairy" />
+          {foodGroups.map((item) => {
+            return <Picker.Item label={item} value={item} />;
+          })}
         </Picker>
 
         {itemArray.map((item) => {

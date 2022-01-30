@@ -24,6 +24,8 @@ const ItemCard = ({ item, setItemArray }) => {
 
   const handleConfirm = (newDate) => {
     setExpiryDate(moment(newDate).format('MMM Do YY'));
+    const docRef = doc(db, 'FoodItems', item.id);
+    updateDoc(docRef, { expiration_date: moment(newDate).format('MMM Do YY') });
     hideDatePicker();
   };
 
@@ -36,10 +38,14 @@ const ItemCard = ({ item, setItemArray }) => {
     deleteDoc(docRef);
   };
   const handleQuantityPress = (num) => {
-    setQuantity((curr) => (curr += num));
+    setQuantity((curr) => {
+      return curr + num;
+    });
+
     if (quantity < 1) {
       handleDelete();
     }
+
     const docRef = doc(db, 'FoodItems', item.id);
     updateDoc(docRef, { quantity: quantity + num });
   };
