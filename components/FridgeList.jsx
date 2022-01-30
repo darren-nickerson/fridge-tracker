@@ -1,21 +1,15 @@
 /* -------------------------------------------------------------------------- */
 /*                                    Fridge List Branch                       */
 /* -------------------------------------------------------------------------- */
-import {
-  getDocs,
-  collection,
-  // addDoc,
-  // deleteDoc,
-  // doc,
-} from 'firebase/firestore';
+import { getDocs, collection } from 'firebase/firestore';
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, SafeAreaView, ScrollView } from 'react-native';
+import { SafeAreaView, ScrollView } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import ItemCard from './ItemCard';
 import { db } from '../core/Config';
 
 const FridgeList = () => {
-  const [selectedValue, setSelectedValue] = useState('meat');
+  const [selectedValue, setSelectedValue] = useState('all');
   const [itemArray, setItemArray] = useState([]);
 
   const getFoodItems = () => {
@@ -34,23 +28,30 @@ const FridgeList = () => {
   };
 
   useEffect(() => {
-    getFoodItems().then((result) =>
-      setItemArray(result.filter((obj) => obj.diet === selectedValue)),
-    );
+    getFoodItems().then((result) => {
+      if (selectedValue === 'all') {
+        setItemArray(result);
+      } else {
+        setItemArray(result.filter((obj) => obj.category === selectedValue));
+      }
+    });
   }, [selectedValue]);
+
   return (
-    <SafeAreaView style={styles.container}>
-      <Text>Here is your fridge!</Text>
-      <Picker
-        style={{ height: 200, width: 300 }}
-        selectedValue={selectedValue}
-        onValueChange={(foodValue) => setSelectedValue(foodValue)}
-      >
-        <Picker.Item label="vegan" value="vegan" />
-        <Picker.Item label="meat" value="meat" />
-        <Picker.Item label="vegetarian" value="vegetarian" />
-      </Picker>
-      <ScrollView>
+    <ScrollView>
+      <SafeAreaView>
+        <Picker
+          style={{ height: 50, width: 180, paddinghorizontal: 20 }}
+          selectedValue={selectedValue}
+          onValueChange={(foodValue) => setSelectedValue(foodValue)}
+        >
+          <Picker.Item label="all" value="all" />
+          <Picker.Item label="fruit" value="fruit" />
+          <Picker.Item label="meat" value="meat" />
+          <Picker.Item label="vegetable" value="vegetable" />
+          <Picker.Item label="dairy" value="dairy" />
+        </Picker>
+
         {itemArray.map((item) => {
           return (
             <ItemCard
@@ -61,18 +62,9 @@ const FridgeList = () => {
             />
           );
         })}
-      </ScrollView>
-    </SafeAreaView>
+      </SafeAreaView>
+    </ScrollView>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#ffffff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
 
 export default FridgeList;

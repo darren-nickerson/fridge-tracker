@@ -1,9 +1,9 @@
 /* -------------------------------------------------------------------------- */
 /*                                    Fridge List Branch                       */
 /* -------------------------------------------------------------------------- */
-import { MaterialIcons } from '@expo/vector-icons';
+import { MaterialIcons, AntDesign } from '@expo/vector-icons';
 import React, { useState } from 'react';
-import { Text, SafeAreaView, TouchableOpacity, Button } from 'react-native';
+import { Text, View, TouchableOpacity, StyleSheet } from 'react-native';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import moment from 'moment';
 import { doc, deleteDoc, updateDoc } from 'firebase/firestore';
@@ -35,7 +35,6 @@ const ItemCard = ({ item, setItemArray }) => {
 
     deleteDoc(docRef);
   };
-  console.log(expiryDate);
   const handleQuantityPress = (num) => {
     setQuantity((curr) => (curr += num));
     if (quantity < 1) {
@@ -46,47 +45,64 @@ const ItemCard = ({ item, setItemArray }) => {
   };
 
   return (
-    <SafeAreaView>
-      <Text
-        style={{
-          fontSize: 20,
-          fontWeight: 'bold',
-          alignSelf: 'center',
-        }}
-      >
-        {item.food_item}
+    <View style={styles.container}>
+      <View style={styles.counter}>
+        <TouchableOpacity onPress={() => handleQuantityPress(1)}>
+          <Text style={styles.quantity}>
+            <AntDesign name="caretup" size={24} color="grey" />
+          </Text>
+        </TouchableOpacity>
+        <Text style={styles.quantity}>{quantity}</Text>
+        <TouchableOpacity onPress={() => handleQuantityPress(-1)}>
+          <Text style={styles.quantity}>
+            <AntDesign name="caretdown" size={24} color="grey" />
+          </Text>
+        </TouchableOpacity>
+      </View>
+      <Text>{item.food_item}</Text>
+      <Text style={styles.date} onPress={showDatePicker}>
+        {moment(expiryDate).format('MMM Do YY')}
       </Text>
-      <TouchableOpacity
-        onPress={() => handleQuantityPress(1)}
-        style={{ alignSelf: 'center' }}
-      >
-        <Text>Add</Text>
-      </TouchableOpacity>
-      <Text>{quantity}</Text>
-      <TouchableOpacity
-        onPress={() => handleQuantityPress(-1)}
-        style={{ alignSelf: 'center' }}
-      >
-        <Text>Minus</Text>
-      </TouchableOpacity>
-      <Button
-        title={moment(expiryDate).format('MMM Do YY')}
-        onPress={showDatePicker}
-      />
       <DateTimePickerModal
         isVisible={isDatePickerVisible}
         mode="date"
         onConfirm={handleConfirm}
         onCancel={hideDatePicker}
       />
-      <TouchableOpacity
-        onPress={() => handleDelete()}
-        style={{ alignSelf: 'center' }}
-      >
+      <TouchableOpacity onPress={() => handleDelete()}>
         <MaterialIcons name="delete" size={24} color="red" />
       </TouchableOpacity>
-    </SafeAreaView>
+    </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flexDirection: 'row',
+    backgroundColor: '#D3D3D3',
+    padding: 7,
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    margin: 10,
+    borderRadius: 5,
+    borderWidth: 1,
+    borderColor: '#D9D9D9',
+  },
+  quantity: {
+    textAlign: 'center',
+  },
+  counter: {
+    width: 50,
+  },
+  date: {
+    backgroundColor: 'green',
+    padding: 6,
+    borderWidth: 1,
+    color: 'white',
+    borderRadius: 5,
+    borderColor: 'grey',
+    fontSize: 12,
+  },
+});
 
 export default ItemCard;

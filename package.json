@@ -27,6 +27,7 @@
     "expo-status-bar": "~1.2.0",
     "firebase": "^9.6.5",
     "firestore": "^1.1.6",
+    "formik": "^2.2.9",
     "install": "^0.13.0",
     "moment": "^2.29.1",
     "native-base": "^3.3.4",
