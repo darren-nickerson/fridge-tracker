@@ -23,7 +23,7 @@ const ItemCard = ({ item, setItemArray }) => {
   };
 
   const handleConfirm = (newDate) => {
-    setExpiryDate(newDate);
+    setExpiryDate(moment(newDate).format('MMM Do YY'));
     hideDatePicker();
   };
 
@@ -61,7 +61,7 @@ const ItemCard = ({ item, setItemArray }) => {
       </View>
       <Text>{item.food_item}</Text>
       <Text style={styles.date} onPress={showDatePicker}>
-        {moment(expiryDate).format('MMM Do YY')}
+        {expiryDate}
       </Text>
       <DateTimePickerModal
         isVisible={isDatePickerVisible}

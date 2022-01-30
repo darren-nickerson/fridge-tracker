@@ -11,7 +11,7 @@ import { db } from '../core/Config';
 const FridgeList = () => {
   const [selectedValue, setSelectedValue] = useState('all');
   const [itemArray, setItemArray] = useState([]);
-
+  console.log(itemArray);
   const getFoodItems = () => {
     const colRef = collection(db, 'FoodItems');
     return getDocs(colRef)

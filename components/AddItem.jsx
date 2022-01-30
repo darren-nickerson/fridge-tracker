@@ -17,7 +17,36 @@ import { Formik } from 'formik';
 
 import { db } from '../core/Config';
 
-const AddItem = () => {
+export default function AddItemFormik() {
+  return (
+    <Formik
+      initialValues={{
+        category: 'dairy',
+        expiration_date: 'this has not worked',
+        food_item: 'chicken',
+        quantity: '10',
+        user_id: '1',
+      }}
+      onSubmit={(values) => {
+        const colRef = collection(db, 'FoodItems');
+
+        addDoc(colRef, values);
+      }}
+    >
+      {({ handleSubmit, setFieldValue, handleChange, values }) => (
+        <AddItem
+          setFieldValue={setFieldValue}
+          handleSubmit={handleSubmit}
+          handleChange={handleChange}
+          values={values}
+        />
+      )}
+    </Formik>
+  );
+}
+
+const AddItem = (props) => {
+  const { setFieldValue, handleSubmit, handleChange, values } = props;
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [expiryDate, setExpiryDate] = useState(new Date());
 
@@ -30,6 +59,7 @@ const AddItem = () => {
   };
 
   const handleConfirm = (newDate) => {
+    setFieldValue('expiration_date', moment(newDate).format('MMM Do YY'));
     setExpiryDate(newDate);
     hideDatePicker();
   };
@@ -43,67 +73,37 @@ const AddItem = () => {
           }}
         >
           <View style={styles.container}>
-            <Formik
-              initialValues={{
-                category: 'dairy',
-                expiration_date: 'this has not worked',
-                food_item: 'chicken',
-                quantity: '10',
-                user_id: '1',
-              }}
-              onSubmit={(values) => {
-                const colRef = collection(db, 'FoodItems');
+            <>
+              <TextInput
+                style={styles.input}
+                placeholder="Add Food Item"
+                onChangeText={handleChange('food_item')}
+                value={values.food_item}
+              />
+              <TextInput
+                style={styles.input}
+                placeholder="Add Category"
+                onChangeText={handleChange('category')}
+                value={values.category}
+              />
+              <Text style={styles.input} onPress={showDatePicker}>
+                {moment(expiryDate).format('MMM Do YY')}
+              </Text>
+              <DateTimePickerModal
+                isVisible={isDatePickerVisible}
+                mode="date"
+                onConfirm={handleConfirm}
+                onCancel={hideDatePicker}
+              />
 
-                addDoc(colRef, values);
-              }}
-            >
-              {(props) => (
-                <>
-                  <TextInput
-                    style={styles.input}
-                    placeholder="Add Food Item"
-                    onChangeText={props.handleChange('food_item')}
-                    value={props.values.food_item}
-                  />
-                  <TextInput
-                    style={styles.input}
-                    placeholder="Add Category"
-                    onChangeText={props.handleChange('category')}
-                    value={props.values.category}
-                  />
-
-                  {/* <TextInput
-                    style={styles.input}
-                    placeholder="Add expiration date"
-                    onChangeText={props.handleChange('expiration_date')}
-                    value={props.values.expiration_date}
-                  /> */}
-
-                  <Text style={styles.input} onPress={showDatePicker}>
-                    {moment(expiryDate).format('MMM Do YY')}
-                  </Text>
-                  <DateTimePickerModal
-                    isVisible={isDatePickerVisible}
-                    mode="date"
-                    onChangeText={props.handleChange('expiration_date')}
-                    onConfirm={handleConfirm}
-                    onCancel={hideDatePicker}
-                  />
-
-                  <TextInput
-                    style={styles.input}
-                    placeholder="Add quantity"
-                    onChangeText={props.handleChange('quantity')}
-                    value={props.values.quantity}
-                  />
-                  <Button
-                    title="Add Item"
-                    color="maroon"
-                    onPress={props.handleSubmit}
-                  />
-                </>
-              )}
-            </Formik>
+              <TextInput
+                style={styles.input}
+                placeholder="Add quantity"
+                onChangeText={handleChange('quantity')}
+                value={values.quantity}
+              />
+              <Button title="Add Item" color="maroon" onPress={handleSubmit} />
+            </>
           </View>
         </TouchableWithoutFeedback>
       </SafeAreaView>
@@ -119,5 +119,3 @@ const styles = StyleSheet.create({
     padding: 10,
   },
 });
-
-export default AddItem;
