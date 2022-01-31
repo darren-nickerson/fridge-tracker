@@ -62,10 +62,7 @@ export default function App() {
         { maxConcepts: 10, minValue: 0.4 },
       );
       setPredictions(
-        newPredictions.outputs[0].data.concepts.map((obj) => [
-          obj.name,
-          obj.value,
-        ]),
+        newPredictions.outputs[0].data.concepts.map((obj) => obj.name),
       );
     } catch (error) {
       console.log('Exception Error: ', error);
