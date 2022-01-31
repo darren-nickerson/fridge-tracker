@@ -3,7 +3,7 @@
 /* -------------------------------------------------------------------------- */
 import { AntDesign, MaterialIcons } from '@expo/vector-icons';
 import React, { useState } from 'react';
-import { Text, View, TouchableOpacity, StyleSheet } from 'react-native';
+import { Text, View, TouchableOpacity, StyleSheet, Modal } from 'react-native';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import moment from 'moment';
 import { doc, deleteDoc, updateDoc } from 'firebase/firestore';
@@ -13,6 +13,7 @@ const ItemCard = ({ item, setItemArray }) => {
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [expiryDate, setExpiryDate] = useState(item.expiration_date);
   const [quantity, setQuantity] = useState(Number(item.quantity));
+  const [modalOpen, setModalOpen] = useState(false);
 
   const showDatePicker = () => {
     setDatePickerVisibility(true);
@@ -75,10 +76,30 @@ const ItemCard = ({ item, setItemArray }) => {
         onConfirm={handleConfirm}
         onCancel={hideDatePicker}
       />
-      <TouchableOpacity onPress={() => handleDelete()}>
-        {/* <Text>❌</Text> */}
-        <MaterialIcons name="delete" size={16} color="#AA4A44" />
-      </TouchableOpacity>
+      <Text onPress={() => setModalOpen(true)}>
+        <MaterialIcons name="delete" size={22} color="#fb4949" />
+      </Text>
+
+      <Modal
+        visible={modalOpen}
+        animationType="slide"
+        style={styles.modalContent}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.modalInnerContainer}>
+            <Text style={styles.modalDelete} onPress={() => handleDelete()}>
+              Delete
+            </Text>
+
+            <Text
+              style={styles.modalCancel}
+              onPress={() => setModalOpen(false)}
+            >
+              Cancel
+            </Text>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -121,6 +142,39 @@ const styles = StyleSheet.create({
     fontSize: 10,
     fontWeight: 'bold',
     backgroundColor: 'green',
+  },
+  modalContent: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    margin: 0,
+  },
+  modalContainer: {
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalInnerContainer: {
+    width: 200,
+    height: 200,
+  },
+  modalDelete: {
+    backgroundColor: '#fb4949',
+    padding: 10,
+    textAlign: 'center',
+    marginBottom: 20,
+    color: 'white',
+    borderRadius: 5,
+  },
+  modalCancel: {
+    backgroundColor: 'white',
+    borderRadius: 5,
+    borderWidth: 1,
+    borderColor: '#D9D9D9',
+    padding: 10,
+    textAlign: 'center',
+    marginBottom: 20,
+    color: 'black',
   },
 });
 

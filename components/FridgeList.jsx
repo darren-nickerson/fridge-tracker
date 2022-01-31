@@ -3,15 +3,7 @@
 /* -------------------------------------------------------------------------- */
 import { getDocs, collection } from 'firebase/firestore';
 import React, { useEffect, useState } from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  Modal,
-  View,
-  Button,
-  StyleSheet,
-  Text,
-} from 'react-native';
+import { SafeAreaView, ScrollView } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import ItemCard from './ItemCard';
 import { db } from '../core/Config';
@@ -19,8 +11,14 @@ import { db } from '../core/Config';
 const FridgeList = () => {
   const [selectedValue, setSelectedValue] = useState('all');
   const [itemArray, setItemArray] = useState([]);
-  const foodGroups = ['🍎 fruit', '🥦 vegetables', '🥩 meat', '🧀 dairy', '🍞 grains', '🐟 fish'];
-  const [modalOpen, setModalOpen] = useState(true);
+  const foodGroups = [
+    '🍎 fruit',
+    '🥦 vegetables',
+    '🥩 meat',
+    '🧀 dairy',
+    '🍞 grains',
+    '🐟 fish',
+  ];
 
   const getFoodItems = () => {
     const colRef = collection(db, 'FoodItems');
@@ -50,32 +48,6 @@ const FridgeList = () => {
   return (
     <ScrollView>
       <SafeAreaView>
-        <Button title="open" onPress={() => setModalOpen(true)} />
-
-        <Modal
-          visible={modalOpen}
-          animationType="slide"
-          style={styles.modalContent}
-        >
-          <View style={styles.modalContainer}>
-            <View style={styles.modalInnerContainer}>
-              <Text
-                style={styles.modalDelete}
-                onPress={() => setModalOpen(false)}
-              >
-                Delete
-              </Text>
-
-              <Text
-                style={styles.modalCancel}
-                onPress={() => setModalOpen(false)}
-              >
-                Cancel
-              </Text>
-            </View>
-          </View>
-        </Modal>
-
         <Picker
           style={{ height: 50, width: 180, paddinghorizontal: 20 }}
           selectedValue={selectedValue}
@@ -101,39 +73,5 @@ const FridgeList = () => {
     </ScrollView>
   );
 };
-
-const styles = StyleSheet.create({
-  modalContent: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    margin: 0,
-  },
-  modalContainer: {
-    flex: 1,
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  modalInnerContainer: {
-    width: 200,
-    height: 200,
-  },
-  modalDelete: {
-    backgroundColor: 'red',
-    padding: 10,
-    textAlign: 'center',
-    marginBottom: 20,
-    color: 'white',
-    borderRadius: 5,
-  },
-  modalCancel: {
-    backgroundColor: 'blue',
-    padding: 10,
-    textAlign: 'center',
-    marginBottom: 20,
-    color: 'white',
-    borderRadius: 5,
-  },
-});
 
 export default FridgeList;
