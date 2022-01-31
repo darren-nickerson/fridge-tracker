@@ -17,7 +17,7 @@ import { Picker } from '@react-native-picker/picker';
 import { Formik } from 'formik';
 
 import { db } from '../core/Config';
-import { barcodeContext } from '../context';
+import { barcodeContext, cameraContext } from '../context';
 
 export default function AddItemFormik() {
   return (
@@ -48,6 +48,7 @@ export default function AddItemFormik() {
 
 const AddItem = (props) => {
   const { barcodeData } = useContext(barcodeContext);
+  const { cameraData } = useContext(cameraContext);
   const { setFieldValue, handleSubmit, handleChange, values } = props;
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [expiryDate, setExpiryDate] = useState(new Date());
@@ -60,7 +61,7 @@ const AddItem = (props) => {
     '🍞 grains',
     '🐟 fish',
   ];
-
+  console.log('live from addItem page: ', cameraData);
   const showDatePicker = () => {
     setDatePickerVisibility(true);
   };

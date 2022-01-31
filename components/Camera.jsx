@@ -4,7 +4,7 @@ import { Camera } from 'expo-camera';
 import * as Clarifai from 'clarifai';
 import { useIsFocused } from '@react-navigation/native';
 import { CLARIFAI_API_KEY } from 'react-native-dotenv';
-import { barcodeContext } from '../context';
+import { barcodeContext, cameraContext } from '../context';
 
 export default function App({ navigation }) {
   const [hasPermission, setHasPermission] = useState(null);
@@ -14,6 +14,7 @@ export default function App({ navigation }) {
   const cameraRef = useRef(null);
   const [scanned, setScanned] = useState(false);
   const { setBarcodeData } = useContext(barcodeContext);
+  const { setCameraData } = useContext(cameraContext);
   const styles = StyleSheet.create({
     container: {
       flex: 1,
@@ -65,6 +66,10 @@ export default function App({ navigation }) {
       setPredictions(
         newPredictions.outputs[0].data.concepts.map((obj) => obj.name),
       );
+      // setCameraData(
+      //   newPredictions.outputs[0].data.concepts.map((obj) => obj.name),
+      // );
+      // navigation.navigate('AddItemFormik');
     } catch (error) {
       console.log('Exception Error: ', error);
     }
