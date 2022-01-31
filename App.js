@@ -20,7 +20,6 @@ import * as Notifications from 'expo-notifications';
 import * as Linking from 'expo-linking';
 import { Alert, Platform, Text } from 'react-native';
 import { barcodeContext } from './context';
-
 import Camera from './components/Camera';
 import AddItem from './components/AddItem';
 import Home from './components/Home';
