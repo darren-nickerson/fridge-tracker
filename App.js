@@ -18,6 +18,7 @@ import {
 import Constants from 'expo-constants';
 import * as Notifications from 'expo-notifications';
 import * as Linking from 'expo-linking';
+import * as Network from 'expo-network';
 
 import { Alert, Platform, Text } from 'react-native';
 import Camera from './components/Camera';
@@ -146,7 +147,11 @@ export default function App() {
         schedulePushNotification({
           title: `${foodArray[i].name} is about to expire`,
           body: 'the body',
-          data: { url: 'exp://192.168.0.17:19000/--/fridge/a' },
+          data: {
+            url: `exp://${
+              Constants.manifest.hostUri.split(':')[0]
+            }:19000/--/fridge/a`,
+          },
         }).catch((err) => console.log(err));
       }
     }
