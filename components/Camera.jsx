@@ -5,6 +5,8 @@ import * as Clarifai from 'clarifai';
 import { useIsFocused } from '@react-navigation/native';
 import { CLARIFAI_API_KEY } from 'react-native-dotenv';
 
+//  console.log('API KEY', CLARIFAI_API_KEY);
+
 export default function App() {
   const [hasPermission, setHasPermission] = useState(null);
   const [camType, setCamType] = useState(Camera.Constants.Type.back);
