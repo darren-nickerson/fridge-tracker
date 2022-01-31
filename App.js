@@ -17,8 +17,9 @@ import {
 } from '@expo/vector-icons';
 import Constants from 'expo-constants';
 import * as Notifications from 'expo-notifications';
+import * as Linking from 'expo-linking';
 
-import { Platform } from 'react-native';
+import { Alert, Platform, Text } from 'react-native';
 import Camera from './components/Camera';
 import AddItem from './components/AddItem';
 import Home from './components/Home';
@@ -37,7 +38,7 @@ const Tab = createBottomTabNavigator();
 function MyTabs() {
   return (
     <Tab.Navigator
-      initialRouteName="Fridge List"
+      initialRouteName="Fridge"
       screenOptions={{
         tabBarActiveTintColor: '#e91e63',
       }}
@@ -86,19 +87,33 @@ function MyTabs() {
     </Tab.Navigator>
   );
 }
+const prefix = Linking.createURL('fridge/');
+
+console.log(prefix);
+const config = {
+  screens: {
+    Recipes: 'a',
+  },
+};
 
 export default function App() {
+  const linking = {
+    prefixes: [prefix],
+    config,
+  };
+
   const foodArray = [
     { name: 'pear', expiry_date: 'Thu Jan 26' },
     { name: 'apple', expiry_date: 'Thu Jan 27' },
     { name: 'kiwi', expiry_date: 'Thu Jan 27' },
-    { name: 'banana', expiry_date: 'Thu Jan 28' },
+    { name: 'banana', expiry_date: 'Fri Jan 28' },
   ];
   const [expoPushToken, setExpoPushToken] = useState('');
   const [notification, setNotification] = useState(false);
   const notificationListener = useRef();
   const responseListener = useRef();
   const currentDate = new Date().toString().slice(0, 10);
+  const lastNotificationResponse = Notifications.useLastNotificationResponse();
 
   async function schedulePushNotification(notificationContent) {
     await Notifications.scheduleNotificationAsync({
@@ -106,6 +121,14 @@ export default function App() {
       trigger: { seconds: 2 },
     });
   }
+
+  useEffect(() => {
+    if (lastNotificationResponse) {
+      Linking.openURL(
+        lastNotificationResponse.notification.request.content.data.url,
+      );
+    }
+  }, [lastNotificationResponse]);
 
   useEffect(() => {
     registerForPushNotificationsAsync().then((token) =>
@@ -126,8 +149,8 @@ export default function App() {
       if (foodArray[i].expiry_date === new Date().toString().slice(0, 10)) {
         schedulePushNotification({
           title: `${foodArray[i].name} is about to expire`,
-          body: 'you have food items out of date',
-          data: { data: 'here is the data' },
+          body: 'the body',
+          data: { url: 'exp://192.168.0.17:19000/--/fridge/a' },
         }).catch((err) => console.log(err));
       }
     }
@@ -172,7 +195,7 @@ export default function App() {
     return token;
   }
   return (
-    <NavigationContainer>
+    <NavigationContainer linking={linking} fallback={<Text>Loading...</Text>}>
       <MyTabs />
     </NavigationContainer>
   );
