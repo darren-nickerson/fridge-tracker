@@ -2,22 +2,16 @@ import React, { useState, useEffect, useRef } from 'react';
 import { StyleSheet, Text, View, Image, Button } from 'react-native';
 import { Camera } from 'expo-camera';
 import * as Clarifai from 'clarifai';
-import { CLARIFAI_API_KEY } from 'react-native-dotenv';
+import { useIsFocused } from '@react-navigation/native';
+// const CLARIFAI_API_KEY = require('../api');
 
 export default function App() {
-  /* -------------------------------------------------------------------------- */
-  /*                                  UseState                                  */
-  /* -------------------------------------------------------------------------- */
-
   const [hasPermission, setHasPermission] = useState(null);
   const [camType, setCamType] = useState(Camera.Constants.Type.back);
   const [image, setImage] = useState(null);
   const [predictions, setPredictions] = useState(null);
   const cameraRef = useRef(null);
-
-  /* -------------------------------------------------------------------------- */
-  /*                                  Styles                                    */
-  /* -------------------------------------------------------------------------- */
+  const [scanned, setScanned] = useState(false);
 
   const styles = StyleSheet.create({
     container: {
@@ -55,12 +49,8 @@ export default function App() {
     },
   });
 
-  /* -------------------------------------------------------------------------- */
-  /*                                  Clarifai                                  */
-  /* -------------------------------------------------------------------------- */
-
   const clarifaiApp = new Clarifai.App({
-    apiKey: CLARIFAI_API_KEY,
+    apiKey: '68acf5c2a23c4765b9dac7e1ed6c93cf',
   });
   process.nextTick = setImmediate;
 
@@ -78,10 +68,8 @@ export default function App() {
       console.log('Exception Error: ', error);
     }
   };
-
-  /* -------------------------------------------------------------------------- */
-  /*                                  Functions/UseEffect                       */
-  /* -------------------------------------------------------------------------- */
+  const isFocused = useIsFocused();
+  console.log(predictions);
 
   useEffect(() => {
     (async () => {
@@ -90,6 +78,19 @@ export default function App() {
     })();
   }, []);
 
+  const handleBarCodeScanned = ({ data }) => {
+    setScanned(true);
+    fetch(`https://en.openfoodfacts.org/api/v0/product/${data}`)
+      .then((response) => response.json())
+      .then((json) => {
+        alert(`${json.product.product_name_en}`);
+        console.log(json.product.product_name_en);
+      })
+      .catch(() => {
+        alert('item not found!');
+      });
+  };
+
   const takePicture = async () => {
     if (cameraRef) {
       const photo = await cameraRef.current.takePictureAsync({ base64: true });
@@ -97,10 +98,6 @@ export default function App() {
       clarifaiDetectObjectsAsync(photo.base64);
     }
   };
-  console.log(predictions);
-  /* -------------------------------------------------------------------------- */
-  /*                                  Component                                  */
-  /* -------------------------------------------------------------------------- */
 
   if (hasPermission === null) {
     return <View />;
@@ -112,7 +109,23 @@ export default function App() {
     <View style={styles.container}>
       {image === null ? (
         <View style={styles.container}>
-          <Camera ref={cameraRef} style={styles.camera} type={camType} />
+          {isFocused && (
+            <Camera
+              onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
+              ref={cameraRef}
+              style={styles.camera}
+              type={camType}
+            />
+          )}
+
+          {scanned && (
+            <Button
+              style={styles.button}
+              color="#841584"
+              title="Scan Again"
+              onPress={() => setScanned(false)}
+            />
+          )}
           <View style={styles.buttonContainer}>
             <Button
               title="Flip"
