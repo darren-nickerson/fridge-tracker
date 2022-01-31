@@ -19,7 +19,14 @@ import { db } from '../core/Config';
 const FridgeList = () => {
   const [selectedValue, setSelectedValue] = useState('all');
   const [itemArray, setItemArray] = useState([]);
-  const foodGroups = ['🍎 fruit', '🥦 vegetables', '🥩 meat', '🧀 dairy', '🍞 grains', '🐟 fish'];
+  const foodGroups = [
+    '🍎 fruit',
+    '🥦 vegetables',
+    '🥩 meat',
+    '🧀 dairy',
+    '🍞 grains',
+    '🐟 fish',
+  ];
   const [modalOpen, setModalOpen] = useState(true);
 
   const getFoodItems = () => {

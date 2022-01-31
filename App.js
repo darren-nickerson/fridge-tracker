@@ -7,7 +7,7 @@
 /* eslint-disable react/no-unstable-nested-components */
 /* eslint-disable no-undef */
 /* eslint-disable react/jsx-filename-extension */
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useContext } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import {
@@ -18,7 +18,7 @@ import {
 import Constants from 'expo-constants';
 import * as Notifications from 'expo-notifications';
 import * as Linking from 'expo-linking';
-
+import { barcodeContext } from './context';
 import { Alert, Platform, Text } from 'react-native';
 import Camera from './components/Camera';
 import AddItem from './components/AddItem';
@@ -35,7 +35,7 @@ Notifications.setNotificationHandler({
 
 const Tab = createBottomTabNavigator();
 
-function MyTabs() {
+function MyTabs({ barcodeData }) {
   return (
     <Tab.Navigator
       initialRouteName="Fridge"
@@ -189,9 +189,12 @@ export default function App() {
 
     return token;
   }
+  const [barcodeData, setBarcodeData] = useState('Add food item');
   return (
-    <NavigationContainer linking={linking} fallback={<Text>Loading...</Text>}>
-      <MyTabs />
-    </NavigationContainer>
+    <barcodeContext.Provider value={{ barcodeData, setBarcodeData }}>
+      <NavigationContainer linking={linking} fallback={<Text>Loading...</Text>}>
+        <MyTabs />
+      </NavigationContainer>
+    </barcodeContext.Provider>
   );
 }
