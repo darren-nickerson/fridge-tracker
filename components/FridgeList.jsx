@@ -1,81 +1,138 @@
-import React, { useEffect } from 'react';
+/* -------------------------------------------------------------------------- */
+/*                                    Fridge List Branch                       */
+/* -------------------------------------------------------------------------- */
+import { getDocs, collection } from 'firebase/firestore';
+import React, { useEffect, useState } from 'react';
 import {
+  SafeAreaView,
+  ScrollView,
+  Modal,
+  View,
+  Button,
   StyleSheet,
   Text,
-  SafeAreaView,
-  FlatList,
-  TouchableOpacity,
 } from 'react-native';
-
 import { Picker } from '@react-native-picker/picker';
+import ItemCard from './ItemCard';
+import { db } from '../core/Config';
 
-const FridgeList = ({ navigation }) => {
-  const [selectedValue, setSelectedValue] = React.useState('Non-Veg');
+const FridgeList = () => {
+  const [selectedValue, setSelectedValue] = useState('all');
+  const [itemArray, setItemArray] = useState([]);
+  const foodGroups = ['🍎 fruit', '🥦 vegetables', '🥩 meat', '🧀 dairy', '🍞 grains', '🐟 fish'];
+  const [modalOpen, setModalOpen] = useState(true);
 
-  const itemList = [
-    { name: 'Tomato', type: 'Vegetarian', id: '134' },
-    { name: 'Steak', type: 'Non-Veg', id: '130' },
-    { name: 'Chocolate', type: 'Vegetarian', id: '154' },
-    { name: 'Biscuits', type: 'Vegan', id: '133' },
-  ];
-  const [itemArray, setItemArray] = React.useState(itemList);
+  const getFoodItems = () => {
+    const colRef = collection(db, 'FoodItems');
+    return getDocs(colRef)
+      .then((snapshot) => {
+        const foodItems = [];
+        snapshot.docs.forEach((doc) => {
+          foodItems.push({ ...doc.data(), id: doc.id });
+        });
+        return foodItems;
+      })
+      .catch((err) => {
+        console.log(err.message);
+      });
+  };
 
   useEffect(() => {
-    setItemArray(
-      itemList.filter((eachFood) => eachFood.type === selectedValue),
-    );
+    getFoodItems().then((result) => {
+      if (selectedValue === 'all') {
+        setItemArray(result);
+      } else {
+        setItemArray(result.filter((obj) => obj.category === selectedValue));
+      }
+    });
   }, [selectedValue]);
 
   return (
-    <SafeAreaView style={styles.container}>
-      <Text>Here is your fridge!</Text>
-      <Picker
-        style={{ height: 100, width: 300 }}
-        selectedValue={selectedValue}
-        onValueChange={(foodValue) => setSelectedValue(foodValue)}
-      >
-        <Picker.Item label="Non-Veg" value="Non-Veg" />
-        <Picker.Item label="Vegetarian" value="Vegetarian" />
-        <Picker.Item label="Vegan" value="Vegan" />
-      </Picker>
-      <FlatList
-        style={styles.list}
-        data={itemArray}
-        renderItem={({ item }) => {
+    <ScrollView>
+      <SafeAreaView>
+        <Button title="open" onPress={() => setModalOpen(true)} />
+
+        <Modal
+          visible={modalOpen}
+          animationType="slide"
+          style={styles.modalContent}
+        >
+          <View style={styles.modalContainer}>
+            <View style={styles.modalInnerContainer}>
+              <Text
+                style={styles.modalDelete}
+                onPress={() => setModalOpen(false)}
+              >
+                Delete
+              </Text>
+
+              <Text
+                style={styles.modalCancel}
+                onPress={() => setModalOpen(false)}
+              >
+                Cancel
+              </Text>
+            </View>
+          </View>
+        </Modal>
+
+        <Picker
+          style={{ height: 50, width: 180, paddinghorizontal: 20 }}
+          selectedValue={selectedValue}
+          onValueChange={(foodValue) => setSelectedValue(foodValue)}
+        >
+          <Picker.Item label="All..." value="all" />
+          {foodGroups.map((item) => {
+            return <Picker.Item label={item} value={item} key={item} />;
+          })}
+        </Picker>
+
+        {itemArray.map((item) => {
           return (
-            <TouchableOpacity
-              onPress={() =>
-                navigation.navigate('Item', { foodItem: item.name })
-              }
-            >
-              <Text style={styles.itemCard}>{item.name}</Text>
-            </TouchableOpacity>
+            <ItemCard
+              key={item.id}
+              item={item}
+              setItemArray={setItemArray}
+              itemArray={itemArray}
+            />
           );
-        }}
-        keyExtractor={(item) => item.id}
-      />
-    </SafeAreaView>
+        })}
+      </SafeAreaView>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
+  modalContent: {
     justifyContent: 'center',
+    alignItems: 'center',
+    margin: 0,
   },
-  list: {
+  modalContainer: {
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalInnerContainer: {
+    width: 200,
+    height: 200,
+  },
+  modalDelete: {
     backgroundColor: 'red',
+    padding: 10,
+    textAlign: 'center',
+    marginBottom: 20,
     color: 'white',
-    height: 300,
+    borderRadius: 5,
   },
-  itemCard: {
-    padding: 50,
-    margin: 20,
-    borderStyle: 'solid',
-    borderColor: 'black',
-    borderWidth: 10,
+  modalCancel: {
+    backgroundColor: 'blue',
+    padding: 10,
+    textAlign: 'center',
+    marginBottom: 20,
+    color: 'white',
+    borderRadius: 5,
   },
 });
 
