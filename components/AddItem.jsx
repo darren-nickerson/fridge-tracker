@@ -30,7 +30,6 @@ export default function AddItemFormik() {
       }}
       onSubmit={(values) => {
         const colRef = collection(db, 'FoodItems');
-
         addDoc(colRef, values);
       }}
     >
@@ -51,7 +50,14 @@ const AddItem = (props) => {
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [expiryDate, setExpiryDate] = useState(new Date());
   const [selectedValue, setSelectedValue] = useState('all');
-  const foodGroups = ['🍎 fruit', '🥦 vegetables', '🥩 meat', '🧀 dairy', '🍞 grains', '🐟 fish'];
+  const foodGroups = [
+    '🍎 fruit',
+    '🥦 vegetables',
+    '🥩 meat',
+    '🧀 dairy',
+    '🍞 grains',
+    '🐟 fish',
+  ];
 
   const showDatePicker = () => {
     setDatePickerVisibility(true);

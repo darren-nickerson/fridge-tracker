@@ -5,7 +5,7 @@ import * as Clarifai from 'clarifai';
 import { useIsFocused } from '@react-navigation/native';
 import { CLARIFAI_API_KEY } from 'react-native-dotenv';
 
-export default function App() {
+export default function App({ navigation }) {
   const [hasPermission, setHasPermission] = useState(null);
   const [camType, setCamType] = useState(Camera.Constants.Type.back);
   const [image, setImage] = useState(null);
@@ -69,7 +69,7 @@ export default function App() {
     }
   };
   const isFocused = useIsFocused();
-  console.log(predictions);
+  console.log('clarifai: ', predictions);
 
   useEffect(() => {
     (async () => {
@@ -83,8 +83,8 @@ export default function App() {
     fetch(`https://en.openfoodfacts.org/api/v0/product/${data}`)
       .then((response) => response.json())
       .then((json) => {
-        alert(`${json.product.product_name_en}`);
-        console.log(json.product.product_name_en);
+        navigation.navigate('AddItemFormik');
+        console.log('barcode: ', json.product.product_name_en);
       })
       .catch(() => {
         alert('item not found!');
