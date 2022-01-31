@@ -145,7 +145,7 @@ export default function App() {
       if (foodArray[i].expiry_date === new Date().toString().slice(0, 10)) {
         schedulePushNotification({
           title: `${foodArray[i].name} is about to expire`,
-          body: 'the body',
+          body: 'Open the fridge',
           data: {
             url: `exp://${
               Constants.manifest.hostUri.split(':')[0]
