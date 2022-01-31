@@ -31,7 +31,6 @@ export default function AddItemFormik() {
       }}
       onSubmit={(values) => {
         const colRef = collection(db, 'FoodItems');
-
         addDoc(colRef, values);
       }}
     >

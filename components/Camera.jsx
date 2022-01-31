@@ -6,8 +6,11 @@ import { useIsFocused } from '@react-navigation/native';
 import { CLARIFAI_API_KEY } from 'react-native-dotenv';
 import { barcodeContext } from '../context';
 
+<<<<<<< HEAD
 //  console.log('API KEY', CLARIFAI_API_KEY);
 
+=======
+>>>>>>> c06fa769084a53d0a630603ca7421c28172ceda7
 export default function App({ navigation }) {
   const [hasPermission, setHasPermission] = useState(null);
   const [camType, setCamType] = useState(Camera.Constants.Type.back);
@@ -72,7 +75,7 @@ export default function App({ navigation }) {
     }
   };
   const isFocused = useIsFocused();
-  console.log(predictions);
+  console.log('clarifai: ', predictions);
 
   useEffect(() => {
     (async () => {
@@ -86,9 +89,14 @@ export default function App({ navigation }) {
     fetch(`https://en.openfoodfacts.org/api/v0/product/${data}`)
       .then((response) => response.json())
       .then((json) => {
+<<<<<<< HEAD
         setBarcodeData(json.product.product_name_en);
         navigation.navigate('AddItemFormik');
         console.log('barcode data:', json.product.product_name_en);
+=======
+        navigation.navigate('AddItemFormik');
+        console.log('barcode: ', json.product.product_name_en);
+>>>>>>> c06fa769084a53d0a630603ca7421c28172ceda7
       })
       .catch(() => {
         alert('item not found!');
