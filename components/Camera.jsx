@@ -2,8 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { StyleSheet, Text, View, Image, Button } from 'react-native';
 import { Camera } from 'expo-camera';
 import * as Clarifai from 'clarifai';
-const CLARIFAI_API_KEY = require('../api');
 import { useIsFocused } from '@react-navigation/native';
+// const CLARIFAI_API_KEY = require('../api');
 
 export default function App() {
   const [hasPermission, setHasPermission] = useState(null);
@@ -50,7 +50,7 @@ export default function App() {
   });
 
   const clarifaiApp = new Clarifai.App({
-    apiKey: CLARIFAI_API_KEY,
+    apiKey: '68acf5c2a23c4765b9dac7e1ed6c93cf',
   });
   process.nextTick = setImmediate;
 
