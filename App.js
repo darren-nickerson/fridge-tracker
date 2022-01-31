@@ -18,7 +18,6 @@ import {
 import Constants from 'expo-constants';
 import * as Notifications from 'expo-notifications';
 import * as Linking from 'expo-linking';
-import * as Network from 'expo-network';
 
 import { Alert, Platform, Text } from 'react-native';
 import Camera from './components/Camera';
@@ -92,7 +91,7 @@ const prefix = Linking.createURL('fridge/');
 
 const config = {
   screens: {
-    Recipes: 'a',
+    Fridge: 'list',
   },
 };
 
@@ -150,7 +149,7 @@ export default function App() {
           data: {
             url: `exp://${
               Constants.manifest.hostUri.split(':')[0]
-            }:19000/--/fridge/a`,
+            }:19000/--/fridge/list`,
           },
         }).catch((err) => console.log(err));
       }
