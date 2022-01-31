@@ -91,7 +91,7 @@ const prefix = Linking.createURL('fridge/');
 
 const config = {
   screens: {
-    Recipes: 'a',
+    Fridge: 'list',
   },
 };
 
@@ -145,8 +145,12 @@ export default function App() {
       if (foodArray[i].expiry_date === new Date().toString().slice(0, 10)) {
         schedulePushNotification({
           title: `${foodArray[i].name} is about to expire`,
-          body: 'the body',
-          data: { url: 'exp://192.168.0.17:19000/--/fridge/a' },
+          body: 'Open the fridge',
+          data: {
+            url: `exp://${
+              Constants.manifest.hostUri.split(':')[0]
+            }:19000/--/fridge/list`,
+          },
         }).catch((err) => console.log(err));
       }
     }
