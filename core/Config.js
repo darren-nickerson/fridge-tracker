@@ -1,8 +1,9 @@
 import { initializeApp } from 'firebase/app';
 import { getFirestore } from 'firebase/firestore';
+import { FIREBASE_API_KEY } from 'react-native-dotenv';
 
 const firebaseConfig = {
-  apiKey: 'AIzaSyAJRozf8Zd2gEqZIPjoR2NoSAQPd-6nd7E',
+  apiKey: FIREBASE_API_KEY,
   authDomain: 'project-fridge-9721e.firebaseapp.com',
   databaseURL:
     'https://project-fridge-9721e-default-rtdb.europe-west1.firebasedatabase.app',
