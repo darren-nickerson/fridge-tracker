@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, Image, Button } from 'react-native';
 import { Camera } from 'expo-camera';
 import * as Clarifai from 'clarifai';
 import { useIsFocused } from '@react-navigation/native';
-// const CLARIFAI_API_KEY = require('../api');
+import { CLARIFAI_API_KEY } from 'react-native-dotenv';
 
 export default function App() {
   const [hasPermission, setHasPermission] = useState(null);
@@ -50,7 +50,7 @@ export default function App() {
   });
 
   const clarifaiApp = new Clarifai.App({
-    apiKey: '68acf5c2a23c4765b9dac7e1ed6c93cf',
+    apiKey: CLARIFAI_API_KEY,
   });
   process.nextTick = setImmediate;
 

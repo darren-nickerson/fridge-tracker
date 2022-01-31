@@ -89,7 +89,6 @@ function MyTabs() {
 }
 const prefix = Linking.createURL('fridge/');
 
-console.log(prefix);
 const config = {
   screens: {
     Recipes: 'a',
@@ -106,7 +105,7 @@ export default function App() {
     { name: 'pear', expiry_date: 'Thu Jan 26' },
     { name: 'apple', expiry_date: 'Thu Jan 27' },
     { name: 'kiwi', expiry_date: 'Thu Jan 27' },
-    { name: 'banana', expiry_date: 'Fri Jan 28' },
+    { name: 'banana', expiry_date: 'Mon Jan 31' },
   ];
   const [expoPushToken, setExpoPushToken] = useState('');
   const [notification, setNotification] = useState(false);
@@ -114,7 +113,6 @@ export default function App() {
   const responseListener = useRef();
   const currentDate = new Date().toString().slice(0, 10);
   const lastNotificationResponse = Notifications.useLastNotificationResponse();
-
   async function schedulePushNotification(notificationContent) {
     await Notifications.scheduleNotificationAsync({
       content: notificationContent,
@@ -141,9 +139,7 @@ export default function App() {
       });
 
     responseListener.current =
-      Notifications.addNotificationResponseReceivedListener((response) => {
-        console.log(response);
-      });
+      Notifications.addNotificationResponseReceivedListener((response) => {});
 
     for (let i = 0; i < foodArray.length; i++) {
       if (foodArray[i].expiry_date === new Date().toString().slice(0, 10)) {
@@ -178,7 +174,6 @@ export default function App() {
         return;
       }
       token = (await Notifications.getExpoPushTokenAsync()).data;
-      console.log(token);
     } else {
       alert('Must use physical device for Push Notifications');
     }
