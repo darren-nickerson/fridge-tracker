@@ -1,5 +1,6 @@
 {
   "expo": {
+    "userInterfaceStyle": "automatic",
     "name": "koalas-project",
     "slug": "koalas-project",
     "version": "1.0.0",
