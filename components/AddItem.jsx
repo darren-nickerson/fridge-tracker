@@ -12,6 +12,7 @@ import {
   ScrollView,
   SafeAreaView,
   Text,
+  TouchableOpacity,
 } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { Formik } from 'formik';
@@ -121,7 +122,10 @@ const AddItem = (props) => {
                 onChangeText={handleChange('quantity')}
                 value={values.quantity}
               />
-              <Button title="Add Item" color="maroon" onPress={handleSubmit} />
+
+              <TouchableOpacity onPress={handleSubmit} style={styles.btn}>
+                <Text style={styles.btntext}>Add to Fridge</Text>
+              </TouchableOpacity>
             </>
           </View>
         </TouchableWithoutFeedback>
@@ -136,5 +140,18 @@ const styles = StyleSheet.create({
     margin: 12,
     borderWidth: 1,
     padding: 10,
+    borderColor: 'green',
+    borderRadius: 7,
+  },
+  btn: {
+    marginTop: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 5,
+  },
+  btntext: {
+    backgroundColor: 'green',
+    padding: 10,
+    color: 'white',
   },
 });
