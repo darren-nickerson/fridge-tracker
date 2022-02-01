@@ -20,12 +20,14 @@ import { db } from '../core/Config';
 import { barcodeContext, cameraContext } from '../context';
 
 export default function AddItemFormik() {
+  const { barcodeData } = useContext(barcodeContext);
+
   return (
     <Formik
       initialValues={{
         category: 'dairy',
         expiration_date: moment().format('MMM Do YY'),
-        food_item: '',
+        food_item: barcodeData,
         quantity: '1',
         user_id: '1',
       }}
@@ -47,7 +49,6 @@ export default function AddItemFormik() {
 }
 
 const AddItem = (props) => {
-  const { barcodeData } = useContext(barcodeContext);
   const { cameraData } = useContext(cameraContext);
   const { setFieldValue, handleSubmit, handleChange, values } = props;
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
@@ -61,7 +62,6 @@ const AddItem = (props) => {
     '🍞 grains',
     '🐟 fish',
   ];
-  console.log('live from addItem page: ', cameraData);
   const showDatePicker = () => {
     setDatePickerVisibility(true);
   };
@@ -93,7 +93,7 @@ const AddItem = (props) => {
             <>
               <TextInput
                 style={styles.input}
-                placeholder={barcodeData}
+                placeholder="Add item Name"
                 onChangeText={handleChange('food_item')}
                 value={values.food_item}
               />

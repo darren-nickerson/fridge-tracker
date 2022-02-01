@@ -193,7 +193,7 @@ export default function App() {
 
     return token;
   }
-  const [barcodeData, setBarcodeData] = useState('Add food item');
+  const [barcodeData, setBarcodeData] = useState('');
   const [cameraData, setCameraData] = useState('testing.............');
   return (
     <cameraContext.Provider value={{ cameraData, setCameraData }}>
