@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import moment from 'moment';
 import { collection, addDoc } from 'firebase/firestore';
@@ -17,20 +17,22 @@ import { Picker } from '@react-native-picker/picker';
 import { Formik } from 'formik';
 
 import { db } from '../core/Config';
+import { barcodeContext, cameraContext } from '../context';
 
 export default function AddItemFormik() {
+  const { barcodeData } = useContext(barcodeContext);
+
   return (
     <Formik
       initialValues={{
         category: 'dairy',
         expiration_date: moment().format('MMM Do YY'),
-        food_item: 'chicken',
+        food_item: barcodeData,
         quantity: '1',
         user_id: '1',
       }}
       onSubmit={(values) => {
         const colRef = collection(db, 'FoodItems');
-
         addDoc(colRef, values);
       }}
     >
@@ -47,6 +49,7 @@ export default function AddItemFormik() {
 }
 
 const AddItem = (props) => {
+  const { cameraData } = useContext(cameraContext);
   const { setFieldValue, handleSubmit, handleChange, values } = props;
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [expiryDate, setExpiryDate] = useState(new Date());
@@ -59,7 +62,6 @@ const AddItem = (props) => {
     '🍞 grains',
     '🐟 fish',
   ];
-
   const showDatePicker = () => {
     setDatePickerVisibility(true);
   };
@@ -89,6 +91,14 @@ const AddItem = (props) => {
         >
           <View style={styles.container}>
             <>
+              <TextInput
+                style={styles.input}
+                placeholder="Add item Name"
+                onChangeText={handleChange('food_item')}
+                value={values.food_item}
+              />
+
+
               <Picker
                 selectedValue={selectedValue}
                 onValueChange={handleFoodGroupPress}

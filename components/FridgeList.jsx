@@ -19,6 +19,7 @@ const FridgeList = () => {
     '🍞 grains',
     '🐟 fish',
   ];
+  const [modalOpen, setModalOpen] = useState(true);
 
   const getFoodItems = () => {
     const colRef = collection(db, 'FoodItems');
