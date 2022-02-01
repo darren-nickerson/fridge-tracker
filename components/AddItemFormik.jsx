@@ -23,21 +23,23 @@ export default function AddItemFormik() {
   const { barcodeData } = useContext(barcodeContext);
   const { setItemAdded } = useContext(itemContext);
 
+  setItemAdded(false);
   return (
     <Formik
       initialValues={{
-        category: 'dairy',
+        category: '',
         expiration_date: moment().format('MMM Do YY'),
         food_item: barcodeData,
         quantity: '1',
         user_id: '1',
       }}
-      onSubmit={(values) => {
+      onSubmit={(values, { resetForm }) => {
         const colRef = collection(db, 'FoodItems');
         setItemAdded((currentItem) => {
           return !currentItem;
         });
         addDoc(colRef, values);
+        resetForm({ values: '' });
       }}
     >
       {({ handleSubmit, setFieldValue, handleChange, values }) => (
