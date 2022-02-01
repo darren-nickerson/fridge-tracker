@@ -1,20 +1,20 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useContext } from 'react';
 import { StyleSheet, Text, View, Image, Button } from 'react-native';
 import { Camera } from 'expo-camera';
 import * as Clarifai from 'clarifai';
 import { useIsFocused } from '@react-navigation/native';
 import { CLARIFAI_API_KEY } from 'react-native-dotenv';
+import { barcodeContext, cameraContext } from '../context';
 
-//  console.log('API KEY', CLARIFAI_API_KEY);
-
-export default function App() {
+export default function App({ navigation }) {
   const [hasPermission, setHasPermission] = useState(null);
   const [camType, setCamType] = useState(Camera.Constants.Type.back);
   const [image, setImage] = useState(null);
   const [predictions, setPredictions] = useState(null);
   const cameraRef = useRef(null);
   const [scanned, setScanned] = useState(false);
-
+  const { setBarcodeData } = useContext(barcodeContext);
+  const { setCameraData } = useContext(cameraContext);
   const styles = StyleSheet.create({
     container: {
       flex: 1,
@@ -66,12 +66,16 @@ export default function App() {
       setPredictions(
         newPredictions.outputs[0].data.concepts.map((obj) => obj.name),
       );
+      // setCameraData(
+      //   newPredictions.outputs[0].data.concepts.map((obj) => obj.name),
+      // );
+      // navigation.navigate('AddItemFormik');
     } catch (error) {
       console.log('Exception Error: ', error);
     }
   };
   const isFocused = useIsFocused();
-  console.log(predictions);
+  console.log('clarifai: ', predictions);
 
   useEffect(() => {
     (async () => {
@@ -85,8 +89,9 @@ export default function App() {
     fetch(`https://en.openfoodfacts.org/api/v0/product/${data}`)
       .then((response) => response.json())
       .then((json) => {
-        alert(`${json.product.product_name_en}`);
-        console.log(json.product.product_name_en);
+        setBarcodeData(json.product.product_name_en);
+        navigation.navigate('AddItemFormik');
+        console.log('barcode data:', json.product.product_name_en);
       })
       .catch(() => {
         alert('item not found!');
