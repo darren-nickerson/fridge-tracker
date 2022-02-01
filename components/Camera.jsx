@@ -1,20 +1,27 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { StyleSheet, Text, View, Image, Button } from 'react-native';
+import React, { useState, useEffect, useRef, useContext } from 'react';
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  Button,
+  ActivityIndicator,
+} from 'react-native';
 import { Camera } from 'expo-camera';
 import * as Clarifai from 'clarifai';
 import { useIsFocused } from '@react-navigation/native';
 import { CLARIFAI_API_KEY } from 'react-native-dotenv';
+import { barcodeContext, cameraContext } from '../context';
 
-//  console.log('API KEY', CLARIFAI_API_KEY);
-
-export default function App() {
+export default function App({ navigation }) {
   const [hasPermission, setHasPermission] = useState(null);
-  const [camType, setCamType] = useState(Camera.Constants.Type.back);
   const [image, setImage] = useState(null);
-  const [predictions, setPredictions] = useState(null);
+  const [predictions, setPredictions] = useState([]);
   const cameraRef = useRef(null);
+  const [isLoading, setIsLoading] = useState(true);
   const [scanned, setScanned] = useState(false);
-
+  const { setBarcodeData } = useContext(barcodeContext);
+  // const { setCameraData } = useContext(cameraContext);
   const styles = StyleSheet.create({
     container: {
       flex: 1,
@@ -64,14 +71,16 @@ export default function App() {
         { maxConcepts: 10, minValue: 0.4 },
       );
       setPredictions(
-        newPredictions.outputs[0].data.concepts.map((obj) => obj.name),
+        newPredictions.outputs[0].data.concepts
+          .map((obj) => obj.name)
+          .slice(0, 3),
       );
+      setIsLoading(false);
     } catch (error) {
       console.log('Exception Error: ', error);
     }
   };
   const isFocused = useIsFocused();
-  console.log(predictions);
 
   useEffect(() => {
     (async () => {
@@ -85,8 +94,8 @@ export default function App() {
     fetch(`https://en.openfoodfacts.org/api/v0/product/${data}`)
       .then((response) => response.json())
       .then((json) => {
-        alert(`${json.product.product_name_en}`);
-        console.log(json.product.product_name_en);
+        setBarcodeData(json.product.product_name_en);
+        navigation.navigate('AddItemFormik');
       })
       .catch(() => {
         alert('item not found!');
@@ -100,7 +109,6 @@ export default function App() {
       clarifaiDetectObjectsAsync(photo.base64);
     }
   };
-
   if (hasPermission === null) {
     return <View />;
   }
@@ -116,7 +124,7 @@ export default function App() {
               onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
               ref={cameraRef}
               style={styles.camera}
-              type={camType}
+              type={Camera.Constants.Type.back}
             />
           )}
 
@@ -130,27 +138,17 @@ export default function App() {
           )}
           <View style={styles.buttonContainer}>
             <Button
-              title="Flip"
-              style={styles.button}
-              onPress={() => {
-                setCamType(
-                  camType === Camera.Constants.Type.back
-                    ? Camera.Constants.Type.front
-                    : Camera.Constants.Type.back,
-                );
-              }}
-            />
-            <Button
               title="Take Picture"
               onPress={() => {
                 takePicture();
               }}
             />
             <Button
-              title="Cancel"
+              title="X"
               style={styles.button}
               onPress={() => {
                 setImage(null);
+                navigation.navigate('Fridge List');
               }}
             />
           </View>
@@ -158,12 +156,42 @@ export default function App() {
       ) : (
         <View style={styles.container}>
           <Image source={{ uri: image }} style={styles.camera} />
+          {isLoading ? (
+            <ActivityIndicator />
+          ) : (
+            predictions.map((item) => {
+              return (
+                <Button
+                  title={item}
+                  key={item}
+                  style={styles.button}
+                  onPress={() => {
+                    setImage(null);
+                    setBarcodeData(item);
+                    navigation.navigate('AddItemFormik');
+
+                    // setdata context to transfer
+                  }}
+                />
+              );
+            })
+          )}
+
           <View style={styles.buttonContainer}>
             <Button
               title="ReTake"
               style={styles.button}
               onPress={() => {
                 setImage(null);
+                setIsLoading(true);
+              }}
+            />
+            <Button
+              title="Add manually"
+              style={styles.button}
+              onPress={() => {
+                setImage(null);
+                navigation.navigate('AddItemFormik');
               }}
             />
           </View>

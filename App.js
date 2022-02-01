@@ -18,8 +18,9 @@ import {
 import Constants from 'expo-constants';
 import * as Notifications from 'expo-notifications';
 import * as Linking from 'expo-linking';
-import { itemContext } from './context';
+
 import { Alert, Platform, Text } from 'react-native';
+import { barcodeContext, cameraContext, itemContext } from './context';
 import Camera from './components/Camera';
 import AddItem from './components/AddItem';
 import Home from './components/Home';
@@ -35,7 +36,7 @@ Notifications.setNotificationHandler({
 
 const Tab = createBottomTabNavigator();
 
-function MyTabs() {
+function MyTabs({ barcodeData }) {
   return (
     <Tab.Navigator
       initialRouteName="Fridge"
@@ -193,12 +194,22 @@ export default function App() {
 
     return token;
   }
-  const [itemAdded, setItemAdded] = useState(false);
+
+   const [itemAdded, setItemAdded] = useState(false);                                                    
+  const [barcodeData, setBarcodeData] = useState('');
+  const [cameraData, setCameraData] = useState('testing.............');
   return (
-    <itemContext.Provider value={{ itemAdded, setItemAdded }}>
-      <NavigationContainer linking={linking} fallback={<Text>Loading...</Text>}>
-        <MyTabs />
-      </NavigationContainer>
+     <itemContext.Provider value={{ itemAdded, setItemAdded }}>
+    <cameraContext.Provider value={{ cameraData, setCameraData }}>
+      <barcodeContext.Provider value={{ barcodeData, setBarcodeData }}>
+        <NavigationContainer
+          linking={linking}
+          fallback={<Text>Loading...</Text>}
+        >
+          <MyTabs />
+        </NavigationContainer>
+      </barcodeContext.Provider>
+    </cameraContext.Provider>
     </itemContext.Provider>
   );
 }
