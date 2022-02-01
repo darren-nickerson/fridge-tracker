@@ -1,7 +1,7 @@
 import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import FridgeList from '../components/FridgeList';
-import AddItemFormik from '../components/AddItem';
+import AddItemFormik from '../components/AddItemFormik';
 
 const Stack = createNativeStackNavigator();
 const FridgeNavigator = () => {

@@ -23,7 +23,6 @@ const FridgeList = () => {
 
   const { itemAdded } = useContext(itemContext);
 
-  const [modalOpen, setModalOpen] = useState(true);
   const getFoodItems = () => {
     const colRef = collection(db, 'FoodItems');
     return getDocs(colRef)

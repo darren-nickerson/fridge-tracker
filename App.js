@@ -22,7 +22,7 @@ import * as Linking from 'expo-linking';
 import { Alert, Platform, Text } from 'react-native';
 import { barcodeContext, cameraContext, itemContext } from './context';
 import Camera from './components/Camera';
-import AddItem from './components/AddItem';
+import AddItemFormik from './components/AddItemFormik';
 import Home from './components/Home';
 import FridgeNavigator from './navigation/FridgeNavigator';
 
@@ -57,7 +57,7 @@ function MyTabs({ barcodeData }) {
       />
       <Tab.Screen
         name="Add Item"
-        component={AddItem}
+        component={AddItemFormik}
         options={{
           tabBarLabel: 'Add Item',
           tabBarIcon: ({ color, size }) => (
@@ -93,6 +93,7 @@ const prefix = Linking.createURL('fridge/');
 const config = {
   screens: {
     Fridge: 'list',
+    Recipes: 'a',
   },
 };
 
@@ -195,21 +196,21 @@ export default function App() {
     return token;
   }
 
-   const [itemAdded, setItemAdded] = useState(false);                                                    
+  const [itemAdded, setItemAdded] = useState(false);
   const [barcodeData, setBarcodeData] = useState('');
   const [cameraData, setCameraData] = useState('testing.............');
   return (
-     <itemContext.Provider value={{ itemAdded, setItemAdded }}>
-    <cameraContext.Provider value={{ cameraData, setCameraData }}>
-      <barcodeContext.Provider value={{ barcodeData, setBarcodeData }}>
-        <NavigationContainer
-          linking={linking}
-          fallback={<Text>Loading...</Text>}
-        >
-          <MyTabs />
-        </NavigationContainer>
-      </barcodeContext.Provider>
-    </cameraContext.Provider>
+    <itemContext.Provider value={{ itemAdded, setItemAdded }}>
+      <cameraContext.Provider value={{ cameraData, setCameraData }}>
+        <barcodeContext.Provider value={{ barcodeData, setBarcodeData }}>
+          <NavigationContainer
+            linking={linking}
+            fallback={<Text>Loading...</Text>}
+          >
+            <MyTabs />
+          </NavigationContainer>
+        </barcodeContext.Provider>
+      </cameraContext.Provider>
     </itemContext.Provider>
   );
 }
