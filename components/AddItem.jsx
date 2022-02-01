@@ -51,7 +51,14 @@ const AddItem = (props) => {
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [expiryDate, setExpiryDate] = useState(new Date());
   const [selectedValue, setSelectedValue] = useState('all');
-  const foodGroups = ['🍎 fruit', '🥦 vegetables', '🥩 meat', '🧀 dairy', '🍞 grains', '🐟 fish'];
+  const foodGroups = [
+    '🍎 fruit',
+    '🥦 vegetables',
+    '🥩 meat',
+    '🧀 dairy',
+    '🍞 grains',
+    '🐟 fish',
+  ];
 
   const showDatePicker = () => {
     setDatePickerVisibility(true);
@@ -82,15 +89,7 @@ const AddItem = (props) => {
         >
           <View style={styles.container}>
             <>
-              <TextInput
-                style={styles.input}
-                placeholder="Add Food Item"
-                onChangeText={handleChange('food_item')}
-                value={values.food_item}
-              />
-
               <Picker
-                style={{ height: 50, width: 175, paddinghorizontal: 20 }}
                 selectedValue={selectedValue}
                 onValueChange={handleFoodGroupPress}
               >
@@ -98,6 +97,13 @@ const AddItem = (props) => {
                   return <Picker.Item key={item} label={item} value={item} />;
                 })}
               </Picker>
+
+              <TextInput
+                style={styles.input}
+                placeholder="Add Food Item"
+                onChangeText={handleChange('food_item')}
+                value={values.food_item}
+              />
 
               <Text style={styles.input} onPress={showDatePicker}>
                 {moment(expiryDate).format('MMM Do YY')}
