@@ -168,6 +168,9 @@ export default function App({ navigation }) {
                   onPress={() => {
                     setImage(null);
                     setBarcodeData(item);
+                    setPredictions([]);
+                    setIsLoading(true);
+
                     navigation.navigate('AddItemFormik');
 
                     // setdata context to transfer
