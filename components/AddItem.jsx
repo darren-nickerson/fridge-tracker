@@ -3,7 +3,6 @@ import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import moment from 'moment';
 import { collection, addDoc } from 'firebase/firestore';
 import {
-  Button,
   StyleSheet,
   TextInput,
   View,
@@ -12,6 +11,7 @@ import {
   ScrollView,
   SafeAreaView,
   Text,
+  TouchableOpacity,
 } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { Formik } from 'formik';
@@ -98,8 +98,8 @@ const AddItem = (props) => {
                 value={values.food_item}
               />
 
+
               <Picker
-                style={{ height: 50, width: 175, paddinghorizontal: 20 }}
                 selectedValue={selectedValue}
                 onValueChange={handleFoodGroupPress}
               >
@@ -107,6 +107,13 @@ const AddItem = (props) => {
                   return <Picker.Item key={item} label={item} value={item} />;
                 })}
               </Picker>
+
+              <TextInput
+                style={styles.input}
+                placeholder="Add Food Item"
+                onChangeText={handleChange('food_item')}
+                value={values.food_item}
+              />
 
               <Text style={styles.input} onPress={showDatePicker}>
                 {moment(expiryDate).format('MMM Do YY')}
@@ -123,8 +130,13 @@ const AddItem = (props) => {
                 placeholder="Add quantity"
                 onChangeText={handleChange('quantity')}
                 value={values.quantity}
+                keyboardType="numeric"
               />
-              <Button title="Add Item" color="maroon" onPress={handleSubmit} />
+              <View style={styles.btnBorder}>
+                <TouchableOpacity onPress={handleSubmit} style={styles.btn}>
+                  <Text style={styles.btntext}>Add to Fridge</Text>
+                </TouchableOpacity>
+              </View>
             </>
           </View>
         </TouchableWithoutFeedback>
@@ -139,5 +151,22 @@ const styles = StyleSheet.create({
     margin: 12,
     borderWidth: 1,
     padding: 10,
+    borderColor: 'green',
+    borderRadius: 7,
+  },
+  btnBorder: {
+    height: 40,
+    marginHorizontal: 10,
+    backgroundColor: 'green',
+    borderRadius: 7,
+    marginTop: 10,
+  },
+  btn: {
+    marginTop: 7,
+  },
+  btntext: {
+    color: 'white',
+    textAlign: 'center',
+    fontSize: 18,
   },
 });

@@ -50,7 +50,6 @@ const FridgeList = () => {
     <ScrollView>
       <SafeAreaView>
         <Picker
-          style={{ height: 50, width: 180, paddinghorizontal: 20 }}
           selectedValue={selectedValue}
           onValueChange={(foodValue) => setSelectedValue(foodValue)}
         >
