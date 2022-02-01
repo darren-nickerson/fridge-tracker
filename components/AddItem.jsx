@@ -91,14 +91,6 @@ const AddItem = (props) => {
         >
           <View style={styles.container}>
             <>
-              <TextInput
-                style={styles.input}
-                placeholder="Add item Name"
-                onChangeText={handleChange('food_item')}
-                value={values.food_item}
-              />
-
-
               <Picker
                 selectedValue={selectedValue}
                 onValueChange={handleFoodGroupPress}
