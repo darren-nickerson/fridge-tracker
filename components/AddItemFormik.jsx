@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import moment from 'moment';
 import { collection, addDoc } from 'firebase/firestore';
@@ -17,7 +17,7 @@ import { Picker } from '@react-native-picker/picker';
 import { Formik } from 'formik';
 
 import { db } from '../core/Config';
-import { barcodeContext, cameraContext, itemContext } from '../context';
+import { barcodeContext, itemContext } from '../context';
 
 export default function AddItemFormik() {
   const { barcodeData } = useContext(barcodeContext);
@@ -55,7 +55,6 @@ export default function AddItemFormik() {
 }
 
 const AddItem = (props) => {
-  const { cameraData } = useContext(cameraContext);
   const { setFieldValue, handleSubmit, handleChange, values } = props;
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [expiryDate, setExpiryDate] = useState(new Date());

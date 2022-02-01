@@ -11,7 +11,7 @@ import { Camera } from 'expo-camera';
 import * as Clarifai from 'clarifai';
 import { useIsFocused } from '@react-navigation/native';
 import { CLARIFAI_API_KEY } from 'react-native-dotenv';
-import { barcodeContext, cameraContext } from '../context';
+import { barcodeContext } from '../context';
 
 export default function App({ navigation }) {
   const [hasPermission, setHasPermission] = useState(null);

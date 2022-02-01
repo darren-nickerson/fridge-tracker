@@ -20,7 +20,7 @@ import * as Notifications from 'expo-notifications';
 import * as Linking from 'expo-linking';
 
 import { Alert, Platform, Text } from 'react-native';
-import { barcodeContext, cameraContext, itemContext } from './context';
+import { barcodeContext, itemContext } from './context';
 import Camera from './components/Camera';
 import AddItemFormik from './components/AddItemFormik';
 import Home from './components/Home';
@@ -198,19 +198,17 @@ export default function App() {
 
   const [itemAdded, setItemAdded] = useState(false);
   const [barcodeData, setBarcodeData] = useState('');
-  const [cameraData, setCameraData] = useState('testing.............');
+
   return (
     <itemContext.Provider value={{ itemAdded, setItemAdded }}>
-      <cameraContext.Provider value={{ cameraData, setCameraData }}>
-        <barcodeContext.Provider value={{ barcodeData, setBarcodeData }}>
-          <NavigationContainer
-            linking={linking}
-            fallback={<Text>Loading...</Text>}
-          >
-            <MyTabs />
-          </NavigationContainer>
-        </barcodeContext.Provider>
-      </cameraContext.Provider>
+      <barcodeContext.Provider value={{ barcodeData, setBarcodeData }}>
+        <NavigationContainer
+          linking={linking}
+          fallback={<Text>Loading...</Text>}
+        >
+          <MyTabs />
+        </NavigationContainer>
+      </barcodeContext.Provider>
     </itemContext.Provider>
   );
 }
