@@ -1,5 +1,12 @@
 import React, { useState, useEffect, useRef, useContext } from 'react';
-import { StyleSheet, Text, View, Image, Button } from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  Button,
+  ActivityIndicator,
+} from 'react-native';
 import { Camera } from 'expo-camera';
 import * as Clarifai from 'clarifai';
 import { useIsFocused } from '@react-navigation/native';
@@ -8,13 +15,13 @@ import { barcodeContext, cameraContext } from '../context';
 
 export default function App({ navigation }) {
   const [hasPermission, setHasPermission] = useState(null);
-  const [camType, setCamType] = useState(Camera.Constants.Type.back);
   const [image, setImage] = useState(null);
-  const [predictions, setPredictions] = useState(null);
+  const [predictions, setPredictions] = useState([]);
   const cameraRef = useRef(null);
+  const [isLoading, setIsLoading] = useState(true);
   const [scanned, setScanned] = useState(false);
   const { setBarcodeData } = useContext(barcodeContext);
-  const { setCameraData } = useContext(cameraContext);
+  // const { setCameraData } = useContext(cameraContext);
   const styles = StyleSheet.create({
     container: {
       flex: 1,
@@ -64,8 +71,11 @@ export default function App({ navigation }) {
         { maxConcepts: 10, minValue: 0.4 },
       );
       setPredictions(
-        newPredictions.outputs[0].data.concepts.map((obj) => obj.name),
+        newPredictions.outputs[0].data.concepts
+          .map((obj) => obj.name)
+          .slice(0, 3),
       );
+      setIsLoading(false);
       // setCameraData(
       //   newPredictions.outputs[0].data.concepts.map((obj) => obj.name),
       // );
@@ -74,6 +84,8 @@ export default function App({ navigation }) {
       console.log('Exception Error: ', error);
     }
   };
+  console.log(predictions);
+
   const isFocused = useIsFocused();
   console.log('clarifai: ', predictions);
 
@@ -121,7 +133,7 @@ export default function App({ navigation }) {
               onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
               ref={cameraRef}
               style={styles.camera}
-              type={camType}
+              type={Camera.Constants.Type.back}
             />
           )}
 
@@ -135,27 +147,17 @@ export default function App({ navigation }) {
           )}
           <View style={styles.buttonContainer}>
             <Button
-              title="Flip"
-              style={styles.button}
-              onPress={() => {
-                setCamType(
-                  camType === Camera.Constants.Type.back
-                    ? Camera.Constants.Type.front
-                    : Camera.Constants.Type.back,
-                );
-              }}
-            />
-            <Button
               title="Take Picture"
               onPress={() => {
                 takePicture();
               }}
             />
             <Button
-              title="Cancel"
+              title="X"
               style={styles.button}
               onPress={() => {
                 setImage(null);
+                navigation.navigate('Fridge List');
               }}
             />
           </View>
@@ -163,12 +165,40 @@ export default function App({ navigation }) {
       ) : (
         <View style={styles.container}>
           <Image source={{ uri: image }} style={styles.camera} />
+          {isLoading ? (
+            <ActivityIndicator />
+          ) : (
+            predictions.map((item) => {
+              return (
+                <Button
+                  title={item}
+                  key={item}
+                  style={styles.button}
+                  onPress={() => {
+                    setImage(null);
+                    navigation.navigate('AddItemFormik');
+                    // setdata context to transfer
+                  }}
+                />
+              );
+            })
+          )}
+
           <View style={styles.buttonContainer}>
             <Button
               title="ReTake"
               style={styles.button}
               onPress={() => {
                 setImage(null);
+                setIsLoading(true);
+              }}
+            />
+            <Button
+              title="Add manually"
+              style={styles.button}
+              onPress={() => {
+                setImage(null);
+                navigation.navigate('AddItemFormik');
               }}
             />
           </View>
