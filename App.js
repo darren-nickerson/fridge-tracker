@@ -18,7 +18,7 @@ import {
 import Constants from 'expo-constants';
 import * as Notifications from 'expo-notifications';
 import * as Linking from 'expo-linking';
-
+import { itemContext } from './context';
 import { Alert, Platform, Text } from 'react-native';
 import Camera from './components/Camera';
 import AddItem from './components/AddItem';
@@ -193,9 +193,12 @@ export default function App() {
 
     return token;
   }
+  const [itemAdded, setItemAdded] = useState(false);
   return (
-    <NavigationContainer linking={linking} fallback={<Text>Loading...</Text>}>
-      <MyTabs />
-    </NavigationContainer>
+    <itemContext.Provider value={{ itemAdded, setItemAdded }}>
+      <NavigationContainer linking={linking} fallback={<Text>Loading...</Text>}>
+        <MyTabs />
+      </NavigationContainer>
+    </itemContext.Provider>
   );
 }

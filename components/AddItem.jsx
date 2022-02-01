@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import moment from 'moment';
 import { collection, addDoc } from 'firebase/firestore';
@@ -17,8 +17,11 @@ import { Picker } from '@react-native-picker/picker';
 import { Formik } from 'formik';
 
 import { db } from '../core/Config';
+import { itemContext } from '../context';
 
 export default function AddItemFormik() {
+  const { itemAdded, setItemAdded } = useContext(itemContext);
+  setItemAdded(false);
   return (
     <Formik
       initialValues={{
@@ -30,7 +33,7 @@ export default function AddItemFormik() {
       }}
       onSubmit={(values) => {
         const colRef = collection(db, 'FoodItems');
-
+        setItemAdded(true);
         addDoc(colRef, values);
       }}
     >
@@ -51,7 +54,14 @@ const AddItem = (props) => {
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [expiryDate, setExpiryDate] = useState(new Date());
   const [selectedValue, setSelectedValue] = useState('all');
-  const foodGroups = ['🍎 fruit', '🥦 vegetables', '🥩 meat', '🧀 dairy', '🍞 grains', '🐟 fish'];
+  const foodGroups = [
+    '🍎 fruit',
+    '🥦 vegetables',
+    '🥩 meat',
+    '🧀 dairy',
+    '🍞 grains',
+    '🐟 fish',
+  ];
 
   const showDatePicker = () => {
     setDatePickerVisibility(true);
