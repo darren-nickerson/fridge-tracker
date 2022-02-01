@@ -120,7 +120,7 @@ const AddItem = (props) => {
                 placeholder="Add quantity"
                 onChangeText={handleChange('quantity')}
                 value={values.quantity}
-                numeric
+                keyboardType="numeric"
               />
               <View style={styles.btnBorder}>
                 <TouchableOpacity onPress={handleSubmit} style={styles.btn}>
