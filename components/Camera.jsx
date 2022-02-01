@@ -174,6 +174,8 @@ export default function App({ navigation }) {
                   onPress={() => {
                     setImage(null);
                     setBarcodeData(item);
+                    setPredictions([]);
+                    setIsLoading(true);
                     Linking.openURL(
                       `exp://${
                         Constants.manifest.hostUri.split(':')[0]
