@@ -8,6 +8,8 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { Camera } from 'expo-camera';
+import Constants from 'expo-constants';
+import * as Linking from 'expo-linking';
 import * as Clarifai from 'clarifai';
 import { useIsFocused } from '@react-navigation/native';
 import { CLARIFAI_API_KEY } from 'react-native-dotenv';
@@ -21,7 +23,6 @@ export default function App({ navigation }) {
   const [isLoading, setIsLoading] = useState(true);
   const [scanned, setScanned] = useState(false);
   const { setBarcodeData } = useContext(barcodeContext);
-  // const { setCameraData } = useContext(cameraContext);
   const styles = StyleSheet.create({
     container: {
       flex: 1,
@@ -95,7 +96,12 @@ export default function App({ navigation }) {
       .then((response) => response.json())
       .then((json) => {
         setBarcodeData(json.product.product_name_en);
-        navigation.navigate('AddItemFormik');
+
+        Linking.openURL(
+          `exp://${
+            Constants.manifest.hostUri.split(':')[0]
+          }:19000/--/fridge/add`,
+        );
       })
       .catch(() => {
         alert('item not found!');
@@ -168,12 +174,11 @@ export default function App({ navigation }) {
                   onPress={() => {
                     setImage(null);
                     setBarcodeData(item);
-                    setPredictions([]);
-                    setIsLoading(true);
-
-                    navigation.navigate('AddItemFormik');
-
-                    // setdata context to transfer
+                    Linking.openURL(
+                      `exp://${
+                        Constants.manifest.hostUri.split(':')[0]
+                      }:19000/--/fridge/add`,
+                    );
                   }}
                 />
               );
@@ -194,7 +199,11 @@ export default function App({ navigation }) {
               style={styles.button}
               onPress={() => {
                 setImage(null);
-                navigation.navigate('AddItemFormik');
+                Linking.openURL(
+                  `exp://${
+                    Constants.manifest.hostUri.split(':')[0]
+                  }:19000/--/fridge/add`,
+                );
               }}
             />
           </View>
