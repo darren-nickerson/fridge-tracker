@@ -34,6 +34,7 @@ Notifications.setNotificationHandler({
   }),
 });
 
+const pathwayURL = Constants.manifest.hostUri.split(':')[0];
 const Tab = createBottomTabNavigator();
 
 function MyTabs({ barcodeData }) {
@@ -94,6 +95,8 @@ const config = {
   screens: {
     Fridge: 'list',
     Recipes: 'a',
+    Camera: 'camera',
+    'Add Item': 'add',
   },
 };
 
@@ -149,9 +152,7 @@ export default function App() {
           title: `${foodArray[i].name} is about to expire`,
           body: 'Open the fridge',
           data: {
-            url: `exp://${
-              Constants.manifest.hostUri.split(':')[0]
-            }:19000/--/fridge/list`,
+            url: `exp://${pathwayURL}:19000/--/fridge/list`,
           },
         }).catch((err) => console.log(err));
       }
