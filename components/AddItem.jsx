@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import moment from 'moment';
 import { collection, addDoc } from 'firebase/firestore';
@@ -21,8 +21,8 @@ import { barcodeContext, cameraContext, itemContext } from '../context';
 
 export default function AddItemFormik() {
   const { barcodeData } = useContext(barcodeContext);
-const { setItemAdded } = useContext(itemContext);
-setItemAdded(false);
+  const { setItemAdded } = useContext(itemContext);
+
   return (
     <Formik
       initialValues={{
@@ -34,7 +34,9 @@ setItemAdded(false);
       }}
       onSubmit={(values) => {
         const colRef = collection(db, 'FoodItems');
-        setItemAdded(true);
+        setItemAdded((currentItem) => {
+          return !currentItem;
+        });
         addDoc(colRef, values);
       }}
     >
