@@ -3,7 +3,6 @@ import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import moment from 'moment';
 import { collection, addDoc } from 'firebase/firestore';
 import {
-  Button,
   StyleSheet,
   TextInput,
   View,
@@ -121,11 +120,13 @@ const AddItem = (props) => {
                 placeholder="Add quantity"
                 onChangeText={handleChange('quantity')}
                 value={values.quantity}
+                numeric
               />
-
-              <TouchableOpacity onPress={handleSubmit} style={styles.btn}>
-                <Text style={styles.btntext}>Add to Fridge</Text>
-              </TouchableOpacity>
+              <View style={styles.btnBorder}>
+                <TouchableOpacity onPress={handleSubmit} style={styles.btn}>
+                  <Text style={styles.btntext}>Add to Fridge</Text>
+                </TouchableOpacity>
+              </View>
             </>
           </View>
         </TouchableWithoutFeedback>
@@ -143,15 +144,19 @@ const styles = StyleSheet.create({
     borderColor: 'green',
     borderRadius: 7,
   },
-  btn: {
+  btnBorder: {
+    height: 40,
+    marginHorizontal: 10,
+    backgroundColor: 'green',
+    borderRadius: 7,
     marginTop: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 5,
+  },
+  btn: {
+    marginTop: 7,
   },
   btntext: {
-    backgroundColor: 'green',
-    padding: 10,
     color: 'white',
+    textAlign: 'center',
+    fontSize: 18,
   },
 });
