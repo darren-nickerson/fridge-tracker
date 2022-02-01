@@ -17,10 +17,11 @@ import { Picker } from '@react-native-picker/picker';
 import { Formik } from 'formik';
 
 import { db } from '../core/Config';
+re;
 import { itemContext } from '../context';
 
 export default function AddItemFormik() {
-  const { itemAdded, setItemAdded } = useContext(itemContext);
+  const { setItemAdded } = useContext(itemContext);
   setItemAdded(false);
   return (
     <Formik
