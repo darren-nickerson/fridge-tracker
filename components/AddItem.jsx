@@ -17,11 +17,12 @@ import { Picker } from '@react-native-picker/picker';
 import { Formik } from 'formik';
 
 import { db } from '../core/Config';
-import { barcodeContext, cameraContext } from '../context';
+import { barcodeContext, cameraContext, itemContext } from '../context';
 
 export default function AddItemFormik() {
   const { barcodeData } = useContext(barcodeContext);
-
+const { setItemAdded } = useContext(itemContext);
+setItemAdded(false);
   return (
     <Formik
       initialValues={{
@@ -33,6 +34,7 @@ export default function AddItemFormik() {
       }}
       onSubmit={(values) => {
         const colRef = collection(db, 'FoodItems');
+        setItemAdded(true);
         addDoc(colRef, values);
       }}
     >
@@ -62,6 +64,7 @@ const AddItem = (props) => {
     '🍞 grains',
     '🐟 fish',
   ];
+
   const showDatePicker = () => {
     setDatePickerVisibility(true);
   };

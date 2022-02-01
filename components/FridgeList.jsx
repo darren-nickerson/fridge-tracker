@@ -2,11 +2,12 @@
 /*                                    Fridge List Branch                       */
 /* -------------------------------------------------------------------------- */
 import { getDocs, collection } from 'firebase/firestore';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { SafeAreaView, ScrollView } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import ItemCard from './ItemCard';
 import { db } from '../core/Config';
+import { itemContext } from '../context';
 
 const FridgeList = () => {
   const [selectedValue, setSelectedValue] = useState('all');
@@ -19,8 +20,10 @@ const FridgeList = () => {
     '🍞 grains',
     '🐟 fish',
   ];
-  const [modalOpen, setModalOpen] = useState(true);
 
+  const { itemAdded } = useContext(itemContext);
+
+  const [modalOpen, setModalOpen] = useState(true);
   const getFoodItems = () => {
     const colRef = collection(db, 'FoodItems');
     return getDocs(colRef)
@@ -35,7 +38,6 @@ const FridgeList = () => {
         console.log(err.message);
       });
   };
-
   useEffect(() => {
     getFoodItems().then((result) => {
       if (selectedValue === 'all') {
@@ -44,7 +46,7 @@ const FridgeList = () => {
         setItemArray(result.filter((obj) => obj.category === selectedValue));
       }
     });
-  }, [selectedValue]);
+  }, [selectedValue, itemAdded]);
 
   return (
     <ScrollView>

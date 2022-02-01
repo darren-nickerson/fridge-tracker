@@ -18,8 +18,9 @@ import {
 import Constants from 'expo-constants';
 import * as Notifications from 'expo-notifications';
 import * as Linking from 'expo-linking';
+
 import { Alert, Platform, Text } from 'react-native';
-import { barcodeContext, cameraContext } from './context';
+import { barcodeContext, cameraContext, itemContext } from './context';
 import Camera from './components/Camera';
 import AddItem from './components/AddItem';
 import Home from './components/Home';
@@ -193,9 +194,12 @@ export default function App() {
 
     return token;
   }
+
+   const [itemAdded, setItemAdded] = useState(false);                                                    
   const [barcodeData, setBarcodeData] = useState('');
   const [cameraData, setCameraData] = useState('testing.............');
   return (
+     <itemContext.Provider value={{ itemAdded, setItemAdded }}>
     <cameraContext.Provider value={{ cameraData, setCameraData }}>
       <barcodeContext.Provider value={{ barcodeData, setBarcodeData }}>
         <NavigationContainer
@@ -206,5 +210,6 @@ export default function App() {
         </NavigationContainer>
       </barcodeContext.Provider>
     </cameraContext.Provider>
+    </itemContext.Provider>
   );
 }
