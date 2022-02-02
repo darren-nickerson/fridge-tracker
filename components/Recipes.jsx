@@ -1,14 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, Button } from 'react-native';
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+import RecipeCard from './RecipeCard';
 
 const Recipes = () => {
   const [recipes, setRecipes] = useState([]);
@@ -16,11 +8,10 @@ const Recipes = () => {
   const fridgeItems = ['apples', 'flour', 'sugar'];
   const fridgeStr = fridgeItems.join(',+');
   const apiKey = '3b4100511cda452e8720c2da844a1984';
-  // const id = '640352';
 
   const getRecipesFromApi = () => {
     return fetch(
-      `https://api.spoonacular.com/recipes/findByIngredients?apiKey=${apiKey}&ingredients=${fridgeStr}&number=10`,
+      `https://api.spoonacular.com/recipes/findByIngredients?apiKey=${apiKey}&ingredients=${fridgeStr}&number=3&ranking=2`,
     )
       .then((response) => response.json())
       .catch((error) => console.error(error));
@@ -36,28 +27,23 @@ const Recipes = () => {
 
   useEffect(() => {
     getRecipesFromApi().then((result) => {
-      setRecipes(
-        result.map((obj) => {
-          return getRecipeFromId(obj.id).then((recipe) => recipe);
-        }),
-      );
+      for (let i = 0; i < result.length; i++) {
+        getRecipeFromId(result[i].id).then((recipe) => {
+          setRecipes((curr) => {
+            const newArr = [...curr, recipe];
+            return newArr;
+          });
+        });
+      }
     });
   }, []);
-  console.log(recipes);
 
   return (
     <View>
       <Text>RECIPES</Text>
-      {/* {Recipes.map((item) => {
-        return (
-          <ItemCard
-            key={item.id}
-            item={item}
-            setItemArray={setItemArray}
-            itemArray={itemArray}
-          />
-        );
-      })} */}
+      {recipes.map((item) => {
+        return <RecipeCard key={item.id} item={item} />;
+      })}
     </View>
   );
 };

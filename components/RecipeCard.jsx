@@ -1,11 +1,22 @@
-import React, { useState } from 'react';
-import { Text, View, TouchableOpacity, StyleSheet, Modal } from 'react-native';
+import React from 'react';
+import { Linking, Text, View, Image } from 'react-native';
 
 const RecipeCard = ({ item }) => {
   return (
     <View>
       <Text>{item.title}</Text>
-      <Text>{item.sourceUrl}</Text>
+      <Text onPress={() => Linking.openURL(`${item.sourceUrl}`)}>
+        {item.sourceUrl}
+      </Text>
+      <Image
+        style={{
+          width: 50,
+          height: 50,
+        }}
+        source={{
+          uri: item.image,
+        }}
+      />
     </View>
   );
 };
