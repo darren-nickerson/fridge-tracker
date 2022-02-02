@@ -15,8 +15,6 @@ const ItemCard = ({ item, setItemArray }) => {
   const [quantity, setQuantity] = useState(Number(item.quantity));
   const [modalOpen, setModalOpen] = useState(false);
 
-  const todaysDate = new Date();
-
   const showDatePicker = () => {
     setDatePickerVisibility(true);
   };
