@@ -56,13 +56,13 @@ const ItemCard = ({ item, setItemArray }) => {
       <View style={styles.counter}>
         <TouchableOpacity onPress={() => handleQuantityPress(1)}>
           <Text style={styles.quantity}>
-            <AntDesign name="caretup" size={16} color="grey" />
+            <AntDesign name="caretup" size={16} color="#85b4e0" />
           </Text>
         </TouchableOpacity>
         <Text style={styles.quantity}>{quantity}</Text>
         <TouchableOpacity onPress={() => handleQuantityPress(-1)}>
           <Text style={styles.quantity}>
-            <AntDesign name="caretdown" size={16} color="grey" />
+            <AntDesign name="caretdown" size={16} color="#85b4e0" />
           </Text>
         </TouchableOpacity>
       </View>
@@ -77,7 +77,7 @@ const ItemCard = ({ item, setItemArray }) => {
         onCancel={hideDatePicker}
       />
       <Text onPress={() => setModalOpen(true)}>
-        <MaterialIcons name="delete" size={22} color="#fb4949" />
+        <MaterialIcons name="delete" size={22} color="#d92626" />
       </Text>
 
       <Modal
@@ -141,7 +141,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     fontSize: 10,
     fontWeight: 'bold',
-    backgroundColor: 'green',
+    backgroundColor: '#009900',
   },
   modalContent: {
     justifyContent: 'center',
@@ -159,7 +159,7 @@ const styles = StyleSheet.create({
     height: 200,
   },
   modalDelete: {
-    backgroundColor: '#fb4949',
+    backgroundColor: '#d92626',
     padding: 10,
     textAlign: 'center',
     marginBottom: 20,
@@ -169,8 +169,8 @@ const styles = StyleSheet.create({
   modalCancel: {
     backgroundColor: 'white',
     borderRadius: 5,
-    borderWidth: 1,
-    borderColor: '#D9D9D9',
+    borderWidth: 1.5,
+    borderColor: '#aecdea',
     padding: 10,
     textAlign: 'center',
     marginBottom: 20,
