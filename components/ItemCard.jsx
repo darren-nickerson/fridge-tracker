@@ -15,7 +15,7 @@ const ItemCard = ({ item, setItemArray }) => {
   const [quantity, setQuantity] = useState(Number(item.quantity));
   const [modalOpen, setModalOpen] = useState(false);
 
-  const todaysDate = moment(new Date()).format('MMM Do YY');
+  const todaysDate = new Date();
 
   const showDatePicker = () => {
     setDatePickerVisibility(true);
@@ -28,7 +28,7 @@ const ItemCard = ({ item, setItemArray }) => {
   const handleConfirm = (newDate) => {
     setExpiryDate(moment(newDate).format('MMM Do YY'));
     const docRef = doc(db, 'FoodItems', item.id);
-    updateDoc(docRef, { expiration_date: moment(newDate).format('MMM Do YY') });
+    updateDoc(docRef, { expiration_date: newDate.toISOString() });
     hideDatePicker();
   };
 
@@ -56,6 +56,10 @@ const ItemCard = ({ item, setItemArray }) => {
     updateDoc(docRef, { quantity: quantity + num });
   };
 
+  const testDate = new Date(expiryDate);
+  console.log(typeof testDate);
+  console.log(testDate.toString());
+
   return (
     <View style={styles.container}>
       <View style={styles.counter}>
@@ -77,25 +81,25 @@ const ItemCard = ({ item, setItemArray }) => {
       </Text>
 
       <View style={styles.iconContainer}>
-        {todaysDate > expiryDate && (
+        {moment(expiryDate).isBefore(Date(), 'day') && (
           <View style={styles.dateBorderRed}>
             <Text style={styles.date} onPress={showDatePicker}>
-              {expiryDate}
+              {moment(expiryDate).format('MMM Do YYYY')}{' '}
             </Text>
           </View>
         )}
 
-        {todaysDate === expiryDate && (
+        {moment(expiryDate).isSame(Date(), 'day') && (
           <View style={styles.dateBorderAmber}>
             <Text style={styles.date} onPress={showDatePicker}>
-              {expiryDate}
+              {moment(expiryDate).format('MMM Do YYYY')}{' '}
             </Text>
           </View>
         )}
-        {todaysDate < expiryDate && (
+        {moment(expiryDate).isAfter(Date(), 'day') && (
           <View style={styles.dateBorderGreen}>
             <Text style={styles.date} onPress={showDatePicker}>
-              {expiryDate}
+              {moment(expiryDate).format('MMM Do YYYY')}
             </Text>
           </View>
         )}

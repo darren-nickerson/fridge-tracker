@@ -34,7 +34,7 @@ export default function AddItemFormik() {
     <Formik
       initialValues={{
         category: '🍎 fruit',
-        expiration_date: moment().format('MMM Do YY'),
+        expiration_date: new Date().toISOString(),
         food_item: barcodeData,
         quantity: '1',
         user_id: '1',
@@ -117,7 +117,7 @@ const AddItem = (props) => {
   };
 
   const handleConfirm = (newDate) => {
-    setFieldValue('expiration_date', moment(newDate).format('MMM Do YY'));
+    setFieldValue('expiration_date', newDate.toISOString());
     setExpiryDate(newDate);
     hideDatePicker();
   };
