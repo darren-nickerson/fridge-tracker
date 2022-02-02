@@ -3,9 +3,11 @@ import {
   StyleSheet,
   Text,
   View,
-  Image,
+  Pressable,
   Button,
   ActivityIndicator,
+  ImageBackground,
+  TouchableOpacity,
 } from 'react-native';
 import { Camera } from 'expo-camera';
 import Constants from 'expo-constants';
@@ -14,6 +16,7 @@ import * as Clarifai from 'clarifai';
 import { useIsFocused } from '@react-navigation/native';
 import { CLARIFAI_API_KEY } from 'react-native-dotenv';
 import { barcodeContext } from '../context';
+import { FontAwesome } from '@expo/vector-icons';
 
 export default function App({ navigation }) {
   const [hasPermission, setHasPermission] = useState(null);
@@ -23,41 +26,6 @@ export default function App({ navigation }) {
   const [isLoading, setIsLoading] = useState(true);
   const [scanned, setScanned] = useState(false);
   const { setBarcodeData } = useContext(barcodeContext);
-  const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-    },
-    camera: {
-      flex: 1,
-    },
-    buttonContainer: {
-      flex: 1,
-      backgroundColor: 'transparent',
-      flexDirection: 'row',
-      margin: 20,
-    },
-    button: {
-      flex: 0.1,
-      alignSelf: 'flex-end',
-      alignItems: 'center',
-    },
-    text: {
-      fontSize: 18,
-      color: 'white',
-    },
-    pictureContainer: {
-      flex: 1,
-      flexDirection: 'column',
-      justifyContent: 'center',
-      alignItems: 'center',
-      borderRadius: 40,
-    },
-    image: {
-      width: '80%',
-      height: '30%',
-      borderRadius: 40,
-    },
-  });
 
   const clarifaiApp = new Clarifai.App({
     apiKey: CLARIFAI_API_KEY,
@@ -131,86 +99,234 @@ export default function App({ navigation }) {
               ref={cameraRef}
               style={styles.camera}
               type={Camera.Constants.Type.back}
-            />
-          )}
-
-          {scanned && (
-            <Button
-              style={styles.button}
-              color="#841584"
-              title="Scan Again"
-              onPress={() => setScanned(false)}
-            />
-          )}
-          <View style={styles.buttonContainer}>
-            <Button
-              title="Take Picture"
-              onPress={() => {
-                takePicture();
-              }}
-            />
-            <Button
-              title="X"
-              style={styles.button}
-              onPress={() => {
-                setImage(null);
-                navigation.navigate('Fridge List');
-              }}
-            />
-          </View>
-        </View>
-      ) : (
-        <View style={styles.container}>
-          <Image source={{ uri: image }} style={styles.camera} />
-          {isLoading ? (
-            <ActivityIndicator />
-          ) : (
-            predictions.map((item) => {
-              return (
-                <Button
-                  title={item}
-                  key={item}
-                  style={styles.button}
+            >
+              <View
+                style={{
+                  position: 'absolute',
+                  bottom: 0,
+                  flexDirection: 'row',
+                  flex: 1,
+                  width: '100%',
+                  padding: 20,
+                  justifyContent: 'space-between',
+                }}
+              >
+                <View
+                  style={{
+                    alignSelf: 'center',
+                    flex: 1,
+                    alignItems: 'center',
+                  }}
+                >
+                  <TouchableOpacity
+                    style={{
+                      width: 70,
+                      height: 70,
+                      bottom: 0,
+                      borderRadius: 50,
+                      backgroundColor: '#fff',
+                    }}
+                    onPress={() => {
+                      takePicture();
+                    }}
+                  />
+                </View>
+              </View>
+              <View style={styles.buttonContainer}>
+                {scanned && (
+                  <Button
+                    style={styles.button}
+                    color="blue"
+                    title="Scan Again"
+                    onPress={() => setScanned(false)}
+                  />
+                )}
+                <FontAwesome
+                  name="close"
+                  size={45}
+                  color="white"
+                  style={styles.cancelButton}
                   onPress={() => {
                     setImage(null);
-                    setBarcodeData(item);
-                    setPredictions([]);
-                    setIsLoading(true);
-                    Linking.openURL(
-                      `exp://${
-                        Constants.manifest.hostUri.split(':')[0]
-                      }:19000/--/fridge/add`,
-                    );
+                    navigation.navigate('Fridge List');
                   }}
                 />
-              );
-            })
+              </View>
+            </Camera>
           )}
-
-          <View style={styles.buttonContainer}>
-            <Button
-              title="ReTake"
-              style={styles.button}
-              onPress={() => {
-                setImage(null);
-                setIsLoading(true);
-              }}
-            />
-            <Button
-              title="Add manually"
-              style={styles.button}
-              onPress={() => {
-                setImage(null);
-                Linking.openURL(
-                  `exp://${
-                    Constants.manifest.hostUri.split(':')[0]
-                  }:19000/--/fridge/add`,
-                );
-              }}
-            />
-          </View>
+        </View>
+      ) : (
+        <View style={styles.pictureContainer}>
+          {isLoading ? (
+            <>
+              <ImageBackground
+                source={{ uri: image }}
+                style={styles.cameraDisplay}
+              />
+              <View style={styles.loading}>
+                <View style={styles.retakeAddManuallyContainer}>
+                  <Pressable
+                    style={styles.reTakeButton}
+                    onPress={() => {
+                      setImage(null);
+                      setIsLoading(true);
+                    }}
+                  >
+                    <Text style={styles.reTakeWord}>ReTake</Text>
+                  </Pressable>
+                  <Button
+                    title="Add manually"
+                    style={styles.button}
+                    onPress={() => {
+                      setImage(null);
+                      Linking.openURL(
+                        `exp://${
+                          Constants.manifest.hostUri.split(':')[0]
+                        }:19000/--/fridge/add`,
+                      );
+                    }}
+                  />
+                </View>
+                <View style={styles.loadingWheel}>
+                  <ActivityIndicator size={'large'} color="#000000" />
+                  <Text style={styles.text}>Figuring Out Item...</Text>
+                </View>
+              </View>
+            </>
+          ) : (
+            <>
+              <ImageBackground
+                source={{ uri: image }}
+                style={styles.cameraPictureResults}
+              />
+              <View style={styles.predictionContainer}>
+                {predictions.map((item) => {
+                  return (
+                    <Button
+                      title={item}
+                      key={item}
+                      style={styles.button}
+                      onPress={() => {
+                        setImage(null);
+                        setBarcodeData(item);
+                        setPredictions([]);
+                        setIsLoading(true);
+                        Linking.openURL(
+                          `exp://${
+                            Constants.manifest.hostUri.split(':')[0]
+                          }:19000/--/fridge/add`,
+                        );
+                      }}
+                    />
+                  );
+                })}
+              </View>
+            </>
+          )}
         </View>
       )}
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  camera: {
+    flex: 10,
+  },
+
+  pictureContainer: {
+    height: '95%',
+    backgroundColor: 'blue',
+  },
+
+  cameraDisplay: {
+    height: '100%',
+    width: '100%',
+  },
+
+  buttonContainer: {
+    alignItems: 'flex-end',
+    backgroundColor: 'transparent',
+    flexDirection: 'column',
+    marginTop: 50,
+    height: 40,
+    marginRight: 20,
+  },
+
+  retakeAddManuallyContainer: {
+    justifyContent: 'space-around',
+    backgroundColor: 'transparent',
+    flexDirection: 'row',
+    marginTop: 50,
+    height: 40,
+    margin: 20,
+  },
+
+  predictionContainer: {
+    flex: 1,
+    backgroundColor: 'blue',
+    flexDirection: 'column',
+    marginTop: 20,
+  },
+
+  cancelButton: {
+    alignSelf: 'flex-end',
+  },
+
+  button: {},
+  text: {
+    fontSize: 30,
+    color: 'white',
+    fontWeight: '200',
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  pictureContainer: {
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 40,
+  },
+
+  loading: {
+    display: 'flex',
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+  },
+
+  loadingWheel: {
+    flexDirection: 'column',
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    justifyContent: 'center',
+  },
+
+  reTakeButton: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 12,
+    paddingHorizontal: 32,
+    borderRadius: 4,
+    elevation: 3,
+    backgroundColor: 'black',
+  },
+
+  reTakeWord: {
+    color: 'white',
+  },
+
+  cameraPictureResults: {
+    height: '50%',
+    width: '100%',
+  },
+});

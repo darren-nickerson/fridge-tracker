@@ -20,7 +20,6 @@ import Constants from 'expo-constants';
 import * as Notifications from 'expo-notifications';
 import * as Linking from 'expo-linking';
 import moment from 'moment';
-import { Alert, Platform, Text } from 'react-native';
 
 import { getDocs, collection } from 'firebase/firestore';
 import { db } from './core/Config';
@@ -76,6 +75,7 @@ function MyTabs({ barcodeData }) {
         name="Camera"
         component={Camera}
         options={{
+          headerShown: false,
           tabBarLabel: 'Camera',
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="camera" color={color} size={size} />
