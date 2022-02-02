@@ -7,6 +7,7 @@
 /* eslint-disable react/no-unstable-nested-components */
 /* eslint-disable no-undef */
 /* eslint-disable react/jsx-filename-extension */
+
 import React, { useState, useEffect, useRef } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -18,6 +19,11 @@ import {
 import Constants from 'expo-constants';
 import * as Notifications from 'expo-notifications';
 import * as Linking from 'expo-linking';
+import moment from 'moment';
+import { Alert, Platform, Text } from 'react-native';
+
+import { getDocs, collection } from 'firebase/firestore';
+import { db } from './core/Config';
 
 import { Alert, Platform, Text, StyleSheet } from 'react-native';
 import { barcodeContext, itemContext } from './context';
@@ -89,6 +95,7 @@ function MyTabs({ barcodeData }) {
     </Tab.Navigator>
   );
 }
+
 const prefix = Linking.createURL('fridge/');
 
 const config = {
@@ -106,17 +113,28 @@ export default function App() {
     config,
   };
 
-  const foodArray = [
-    { name: 'pear', expiry_date: 'Thu Jan 26' },
-    { name: 'apple', expiry_date: 'Thu Jan 27' },
-    { name: 'kiwi', expiry_date: 'Thu Jan 27' },
-    { name: 'banana', expiry_date: 'Mon Jan 31' },
-  ];
+  const getFoodItems = () => {
+    const colRef = collection(db, 'FoodItems');
+    return getDocs(colRef)
+      .then((snapshot) => {
+        const foodItems = [];
+        snapshot.docs.forEach((doc) => {
+          foodItems.push({ ...doc.data(), id: doc.id });
+        });
+        return foodItems;
+      })
+      .catch((err) => {
+        console.log(err.message);
+      });
+  };
+
+  const [itemAdded, setItemAdded] = useState(false);
+  const [barcodeData, setBarcodeData] = useState('');
   const [expoPushToken, setExpoPushToken] = useState('');
   const [notification, setNotification] = useState(false);
+  const [foodItems, setFoodItems] = useState([]);
   const notificationListener = useRef();
   const responseListener = useRef();
-  const currentDate = new Date().toString().slice(0, 10);
   const lastNotificationResponse = Notifications.useLastNotificationResponse();
   async function schedulePushNotification(notificationContent) {
     await Notifications.scheduleNotificationAsync({
@@ -124,6 +142,22 @@ export default function App() {
       trigger: { seconds: 2 },
     });
   }
+
+  useEffect(() => {
+    getFoodItems().then((result) => {
+      for (let i = 0; i < result.length; i++) {
+        if (result[i].expiration_date === moment().format('MMM Do YY')) {
+          schedulePushNotification({
+            title: `${result[i].food_item} is expiring today!`,
+            body: '🍽️ 🍳 🥧🍕🍔🌮🍣 😃😃😃😃😃😃',
+            data: {
+              url: `exp://${pathwayURL}:19000/--/fridge/list`,
+            },
+          }).catch((err) => console.log(err));
+        }
+      }
+    });
+  }, [itemAdded]);
 
   useEffect(() => {
     if (lastNotificationResponse) {
@@ -145,18 +179,6 @@ export default function App() {
 
     responseListener.current =
       Notifications.addNotificationResponseReceivedListener((response) => {});
-
-    for (let i = 0; i < foodArray.length; i++) {
-      if (foodArray[i].expiry_date === new Date().toString().slice(0, 10)) {
-        schedulePushNotification({
-          title: `${foodArray[i].name} is about to expire`,
-          body: 'Open the fridge',
-          data: {
-            url: `exp://${pathwayURL}:19000/--/fridge/list`,
-          },
-        }).catch((err) => console.log(err));
-      }
-    }
 
     return () => {
       Notifications.removeNotificationSubscription(
@@ -196,9 +218,6 @@ export default function App() {
 
     return token;
   }
-
-  const [itemAdded, setItemAdded] = useState(false);
-  const [barcodeData, setBarcodeData] = useState('');
 
   return (
     <itemContext.Provider value={{ itemAdded, setItemAdded }}>
