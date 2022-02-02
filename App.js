@@ -19,7 +19,7 @@ import Constants from 'expo-constants';
 import * as Notifications from 'expo-notifications';
 import * as Linking from 'expo-linking';
 
-import { Alert, Platform, Text } from 'react-native';
+import { Alert, Platform, Text, StyleSheet } from 'react-native';
 import { barcodeContext, itemContext } from './context';
 import Camera from './components/Camera';
 import AddItemFormik from './components/AddItemFormik';
@@ -42,7 +42,7 @@ function MyTabs({ barcodeData }) {
     <Tab.Navigator
       initialRouteName="Fridge"
       screenOptions={{
-        tabBarActiveTintColor: '#e91e63',
+        tabBarActiveTintColor: '#85b4e0',
       }}
     >
       <Tab.Screen
@@ -207,9 +207,13 @@ export default function App() {
           linking={linking}
           fallback={<Text>Loading...</Text>}
         >
-          <MyTabs />
+          <MyTabs style={styles.app} />
         </NavigationContainer>
       </barcodeContext.Provider>
     </itemContext.Provider>
   );
 }
+
+const styles = StyleSheet.create({
+  app: { backgroundColor: '#85b4e0' },
+});
