@@ -15,6 +15,8 @@ const ItemCard = ({ item, setItemArray }) => {
   const [quantity, setQuantity] = useState(Number(item.quantity));
   const [modalOpen, setModalOpen] = useState(false);
 
+  const todaysDate = moment(new Date()).format('MMM Do YY');
+
   const showDatePicker = () => {
     setDatePickerVisibility(true);
   };
@@ -40,6 +42,9 @@ const ItemCard = ({ item, setItemArray }) => {
   };
   const handleQuantityPress = (num) => {
     setQuantity((curr) => {
+      if (curr + num < 1) {
+        setModalOpen(true);
+      }
       return curr + num;
     });
 
@@ -50,13 +55,6 @@ const ItemCard = ({ item, setItemArray }) => {
     const docRef = doc(db, 'FoodItems', item.id);
     updateDoc(docRef, { quantity: quantity + num });
   };
-
-  // const truncateHandler = (str) => {
-  //   if (str.length > 20) {
-  //     return str.slice(0, 20).concat('...');
-  //   }
-  //   return str;
-  // };
 
   return (
     <View style={styles.container}>
@@ -79,11 +77,28 @@ const ItemCard = ({ item, setItemArray }) => {
       </Text>
 
       <View style={styles.iconContainer}>
-        <View style={styles.dateBorder}>
-          <Text style={styles.date} onPress={showDatePicker}>
-            {expiryDate}
-          </Text>
-        </View>
+        {todaysDate > expiryDate && (
+          <View style={styles.dateBorderRed}>
+            <Text style={styles.date} onPress={showDatePicker}>
+              {expiryDate}
+            </Text>
+          </View>
+        )}
+
+        {todaysDate === expiryDate && (
+          <View style={styles.dateBorderAmber}>
+            <Text style={styles.date} onPress={showDatePicker}>
+              {expiryDate}
+            </Text>
+          </View>
+        )}
+        {todaysDate < expiryDate && (
+          <View style={styles.dateBorderGreen}>
+            <Text style={styles.date} onPress={showDatePicker}>
+              {expiryDate}
+            </Text>
+          </View>
+        )}
 
         <DateTimePickerModal
           isVisible={isDatePickerVisible}
@@ -93,7 +108,7 @@ const ItemCard = ({ item, setItemArray }) => {
         />
 
         <Text onPress={() => setModalOpen(true)}>
-          <MaterialIcons name="delete" size={22} color="#d92626" />
+          <MaterialIcons name="delete" size={22} color="#ec9393" />
         </Text>
       </View>
 
@@ -111,7 +126,14 @@ const ItemCard = ({ item, setItemArray }) => {
             </View>
             <Text
               style={styles.modalCancel}
-              onPress={() => setModalOpen(false)}
+              onPress={() => {
+                setModalOpen(false);
+                if (quantity === 0) {
+                  setQuantity((curr) => {
+                    return curr + 1;
+                  });
+                }
+              }}
             >
               Cancel
             </Text>
@@ -215,6 +237,31 @@ const styles = StyleSheet.create({
   foodItem: {
     marginLeft: 15,
     flex: 3,
+  },
+
+  dateBorderRed: {
+    borderRadius: 3,
+    borderWidth: 1,
+    borderColor: '#d92626',
+    backgroundColor: '#d92626',
+    textAlign: 'center',
+    marginRight: 6,
+  },
+  dateBorderGreen: {
+    borderRadius: 3,
+    borderWidth: 1,
+    borderColor: '#009900',
+    backgroundColor: '#009900',
+    textAlign: 'center',
+    marginRight: 6,
+  },
+  dateBorderAmber: {
+    borderRadius: 3,
+    borderWidth: 1,
+    borderColor: '#cc9900',
+    backgroundColor: '#cc9900',
+    textAlign: 'center',
+    marginRight: 6,
   },
 });
 
