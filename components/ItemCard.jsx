@@ -51,6 +51,13 @@ const ItemCard = ({ item, setItemArray }) => {
     updateDoc(docRef, { quantity: quantity + num });
   };
 
+  // const truncateHandler = (str) => {
+  //   if (str.length > 20) {
+  //     return str.slice(0, 20).concat('...');
+  //   }
+  //   return str;
+  // };
+
   return (
     <View style={styles.container}>
       <View style={styles.counter}>
@@ -66,20 +73,29 @@ const ItemCard = ({ item, setItemArray }) => {
           </Text>
         </TouchableOpacity>
       </View>
-      <Text>{item.food_item}</Text>
-      <Text style={styles.date} onPress={showDatePicker}>
-        {expiryDate}
-      </Text>
-      <DateTimePickerModal
-        isVisible={isDatePickerVisible}
-        mode="date"
-        onConfirm={handleConfirm}
-        onCancel={hideDatePicker}
-      />
 
-      <Text onPress={() => setModalOpen(true)}>
-        <MaterialIcons name="delete" size={22} color="#d92626" />
+      <Text numberOfLines={1} style={styles.foodItem}>
+        {item.food_item}
       </Text>
+
+      <View style={styles.iconContainer}>
+        <View style={styles.dateBorder}>
+          <Text style={styles.date} onPress={showDatePicker}>
+            {expiryDate}
+          </Text>
+        </View>
+
+        <DateTimePickerModal
+          isVisible={isDatePickerVisible}
+          mode="date"
+          onConfirm={handleConfirm}
+          onCancel={hideDatePicker}
+        />
+
+        <Text onPress={() => setModalOpen(true)}>
+          <MaterialIcons name="delete" size={22} color="#d92626" />
+        </Text>
+      </View>
 
       <Modal
         visible={modalOpen}
@@ -109,11 +125,12 @@ const ItemCard = ({ item, setItemArray }) => {
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
     backgroundColor: 'white',
     padding: 1,
     paddingHorizontal: 7,
     alignItems: 'center',
-    justifyContent: 'space-between',
     margin: 10,
     borderRadius: 5,
     borderWidth: 1,
@@ -138,12 +155,18 @@ const styles = StyleSheet.create({
   },
   date: {
     padding: 3,
-    paddingHorizontal: 10,
+    paddingHorizontal: 7,
     color: 'white',
-    borderRadius: 5,
     fontSize: 10,
     fontWeight: 'bold',
+  },
+  dateBorder: {
+    borderRadius: 3,
+    borderWidth: 1,
+    borderColor: '#009900',
     backgroundColor: '#009900',
+    textAlign: 'center',
+    marginRight: 6,
   },
   modalContent: {
     justifyContent: 'center',
@@ -181,6 +204,17 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginBottom: 20,
     color: 'black',
+  },
+  iconContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    right: 0,
+    textAlign: 'right',
+    marginLeft: 10,
+  },
+  foodItem: {
+    marginLeft: 15,
+    flex: 3,
   },
 });
 

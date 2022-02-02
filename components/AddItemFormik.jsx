@@ -1,4 +1,5 @@
 import React, { useContext, useState } from 'react';
+import * as yup from 'yup';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import moment from 'moment';
 import { collection, addDoc } from 'firebase/firestore';
@@ -25,15 +26,20 @@ export default function AddItemFormik() {
   const { setItemAdded } = useContext(itemContext);
   const [handleItemAdded, setHandleItemAdded] = useState('');
 
+  const foodSchema = yup.object({
+    food_item: yup.string().required('Please Enter Valid Food Item').max(50),
+    quantity: yup.string().required('Please Enter Number between 1-99').max(2),
+  });
   return (
     <Formik
       initialValues={{
-        category: '',
+        category: '🍎 fruit',
         expiration_date: moment().format('MMM Do YY'),
         food_item: barcodeData,
         quantity: '1',
         user_id: '1',
       }}
+      validationSchema={foodSchema}
       enableReinitialize
       onSubmit={(values, { resetForm }) => {
         const colRef = collection(db, 'FoodItems');
@@ -49,13 +55,24 @@ export default function AddItemFormik() {
         }, 2000);
       }}
     >
-      {({ handleSubmit, setFieldValue, handleChange, values }) => (
+      {({
+        handleSubmit,
+        setFieldValue,
+        handleChange,
+        values,
+        errors,
+        touched,
+        handleBlur,
+      }) => (
         <AddItem
           setFieldValue={setFieldValue}
           handleSubmit={handleSubmit}
           handleChange={handleChange}
           values={values}
           handleItemAdded={handleItemAdded}
+          errors={errors}
+          touched={touched}
+          handleBlur={handleBlur}
         />
       )}
     </Formik>
@@ -63,7 +80,16 @@ export default function AddItemFormik() {
 }
 
 const AddItem = (props) => {
-  const { setFieldValue, handleSubmit, handleChange, values, handleItemAdded } = props;
+  const {
+    setFieldValue,
+    handleSubmit,
+    handleChange,
+    values,
+    handleItemAdded,
+    errors,
+    touched,
+    handleBlur,
+  } = props;
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 
   const [expiryDate, setExpiryDate] = useState(new Date());
@@ -120,7 +146,10 @@ const AddItem = (props) => {
                 placeholder="Add Food Item"
                 onChangeText={handleChange('food_item')}
                 value={values.food_item}
+                onBlur={handleBlur('food_item')}
               />
+
+              <Text>{touched.food_item && errors.food_item} </Text>
 
               <Text style={styles.input} onPress={showDatePicker}>
                 {moment(expiryDate).format('MMM Do YY')}
@@ -138,7 +167,10 @@ const AddItem = (props) => {
                 onChangeText={handleChange('quantity')}
                 value={values.quantity}
                 keyboardType="numeric"
+                onBlur={handleBlur('quantity')}
               />
+              <Text>{touched.food_item && errors.quantity} </Text>
+
               <View style={styles.btnBorder}>
                 <TouchableOpacity onPress={handleSubmit} style={styles.btn}>
                   <Text style={styles.btntext}>Add to Fridge</Text>
