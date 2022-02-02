@@ -76,6 +76,7 @@ const ItemCard = ({ item, setItemArray }) => {
         onConfirm={handleConfirm}
         onCancel={hideDatePicker}
       />
+
       <Text onPress={() => setModalOpen(true)}>
         <MaterialIcons name="delete" size={22} color="#d92626" />
       </Text>
@@ -87,10 +88,11 @@ const ItemCard = ({ item, setItemArray }) => {
       >
         <View style={styles.modalContainer}>
           <View style={styles.modalInnerContainer}>
-            <Text style={styles.modalDelete} onPress={() => handleDelete()}>
-              Delete
-            </Text>
-
+            <View style={styles.deletebtn}>
+              <Text style={styles.modalDelete} onPress={() => handleDelete()}>
+                Delete
+              </Text>
+            </View>
             <Text
               style={styles.modalCancel}
               onPress={() => setModalOpen(false)}
@@ -158,13 +160,17 @@ const styles = StyleSheet.create({
     width: 200,
     height: 200,
   },
+  deletebtn: {
+    borderColor: '#d92626',
+    borderWidth: 1,
+    borderRadius: 5,
+    marginBottom: 20,
+  },
   modalDelete: {
     backgroundColor: '#d92626',
     padding: 10,
     textAlign: 'center',
-    marginBottom: 20,
     color: 'white',
-    borderRadius: 5,
   },
   modalCancel: {
     backgroundColor: 'white',

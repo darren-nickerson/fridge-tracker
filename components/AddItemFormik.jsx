@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import moment from 'moment';
 import { collection, addDoc } from 'firebase/firestore';
@@ -17,11 +17,13 @@ import { Picker } from '@react-native-picker/picker';
 import { Formik } from 'formik';
 
 import { db } from '../core/Config';
+
 import { barcodeContext, itemContext } from '../context';
 
 export default function AddItemFormik() {
   const { barcodeData, setBarcodeData } = useContext(barcodeContext);
   const { setItemAdded } = useContext(itemContext);
+  const [handleItemAdded, setHandleItemAdded] = useState('');
 
   return (
     <Formik
@@ -39,8 +41,12 @@ export default function AddItemFormik() {
           return !currentItem;
         });
         addDoc(colRef, values);
+        setHandleItemAdded('Item added');
         resetForm({ values: '' });
         setBarcodeData('');
+        setTimeout(() => {
+          setHandleItemAdded('');
+        }, 2000);
       }}
     >
       {({ handleSubmit, setFieldValue, handleChange, values }) => (
@@ -49,6 +55,7 @@ export default function AddItemFormik() {
           handleSubmit={handleSubmit}
           handleChange={handleChange}
           values={values}
+          handleItemAdded={handleItemAdded}
         />
       )}
     </Formik>
@@ -56,8 +63,9 @@ export default function AddItemFormik() {
 }
 
 const AddItem = (props) => {
-  const { setFieldValue, handleSubmit, handleChange, values } = props;
+  const { setFieldValue, handleSubmit, handleChange, values, handleItemAdded } = props;
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+
   const [expiryDate, setExpiryDate] = useState(new Date());
   const [selectedValue, setSelectedValue] = useState('all');
   const foodGroups = [
@@ -135,6 +143,9 @@ const AddItem = (props) => {
                 <TouchableOpacity onPress={handleSubmit} style={styles.btn}>
                   <Text style={styles.btntext}>Add to Fridge</Text>
                 </TouchableOpacity>
+                <View style={styles.addItem}>
+                  <Text style={styles.addItemText}>{handleItemAdded} </Text>
+                </View>
               </View>
             </>
           </View>
@@ -163,9 +174,13 @@ const styles = StyleSheet.create({
   btn: {
     marginTop: 7,
   },
+
   btntext: {
     color: 'white',
     textAlign: 'center',
     fontSize: 18,
   },
+  addItemText: { textAlign: 'center', marginTop: 25, color: '#009900' },
 });
+
+// #85b4e0
