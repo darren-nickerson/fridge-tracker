@@ -4,7 +4,7 @@ import { StyleSheet, Text, View, Button } from 'react-native';
 import { SPOONACULAR_API_KEY } from 'react-native-dotenv';
 import RecipeCard from './RecipeCard';
 
-// console.log('SPOONACULAR_API_KEY: ', SPOONACULAR_API_KEY);
+//console.log('SPOONACULAR_API_KEY: ', SPOONACULAR_API_KEY);
 
 import { db } from '../core/Config';
 
