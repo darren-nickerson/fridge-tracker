@@ -22,9 +22,9 @@ import * as Linking from 'expo-linking';
 import moment from 'moment';
 
 import { getDocs, collection } from 'firebase/firestore';
+import { Alert, Platform, Text, StyleSheet } from 'react-native';
 import { db } from './core/Config';
 
-import { Alert, Platform, Text, StyleSheet } from 'react-native';
 import { barcodeContext, itemContext } from './context';
 import Camera from './components/Camera';
 import AddItemFormik from './components/AddItemFormik';
