@@ -29,7 +29,7 @@ import { Alert, Platform, Text, StyleSheet } from 'react-native';
 import { barcodeContext, itemContext } from './context';
 import Camera from './components/Camera';
 import AddItemFormik from './components/AddItemFormik';
-import Home from './components/Home';
+import Recipes from './components/Recipes';
 import FridgeNavigator from './navigation/FridgeNavigator';
 
 Notifications.setNotificationHandler({
@@ -84,7 +84,7 @@ function MyTabs({ barcodeData }) {
       />
       <Tab.Screen
         name="Recipes"
-        component={Home}
+        component={Recipes}
         options={{
           tabBarLabel: 'Recipes',
           tabBarIcon: ({ color, size }) => (
