@@ -20,12 +20,9 @@ import Constants from 'expo-constants';
 import * as Notifications from 'expo-notifications';
 import * as Linking from 'expo-linking';
 import moment from 'moment';
-import { Alert, Platform, Text } from 'react-native';
-
 import { getDocs, collection } from 'firebase/firestore';
-import { db } from './core/Config';
-
 import { Alert, Platform, Text, StyleSheet } from 'react-native';
+import { db } from './core/Config';
 import { barcodeContext, itemContext } from './context';
 import Camera from './components/Camera';
 import AddItemFormik from './components/AddItemFormik';
