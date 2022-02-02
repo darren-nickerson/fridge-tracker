@@ -26,7 +26,7 @@ const ItemCard = ({ item, setItemArray }) => {
   const handleConfirm = (newDate) => {
     setExpiryDate(moment(newDate).format('MMM Do YY'));
     const docRef = doc(db, 'FoodItems', item.id);
-    updateDoc(docRef, { expiration_date: newDate.toISOString() });
+    updateDoc(docRef, { expiration_date: expiryDate });
     hideDatePicker();
   };
 
@@ -54,10 +54,6 @@ const ItemCard = ({ item, setItemArray }) => {
     updateDoc(docRef, { quantity: quantity + num });
   };
 
-  const testDate = new Date(expiryDate);
-  console.log(typeof testDate);
-  console.log(testDate.toString());
-
   return (
     <View style={styles.container}>
       <View style={styles.counter}>
@@ -82,7 +78,7 @@ const ItemCard = ({ item, setItemArray }) => {
         {moment(expiryDate).isBefore(Date(), 'day') && (
           <View style={styles.dateBorderRed}>
             <Text style={styles.date} onPress={showDatePicker}>
-              {moment(expiryDate).format('MMM Do YYYY')}{' '}
+              {moment(expiryDate).format('MMM Do YY')}{' '}
             </Text>
           </View>
         )}
@@ -90,14 +86,14 @@ const ItemCard = ({ item, setItemArray }) => {
         {moment(expiryDate).isSame(Date(), 'day') && (
           <View style={styles.dateBorderAmber}>
             <Text style={styles.date} onPress={showDatePicker}>
-              {moment(expiryDate).format('MMM Do YYYY')}{' '}
+              {moment(expiryDate).format('MMM Do YY')}{' '}
             </Text>
           </View>
         )}
         {moment(expiryDate).isAfter(Date(), 'day') && (
           <View style={styles.dateBorderGreen}>
             <Text style={styles.date} onPress={showDatePicker}>
-              {moment(expiryDate).format('MMM Do YYYY')}
+              {moment(expiryDate).format('MMM Do YY')}
             </Text>
           </View>
         )}
