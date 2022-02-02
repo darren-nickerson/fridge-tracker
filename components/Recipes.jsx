@@ -1,17 +1,19 @@
+import { getDocs, collection } from 'firebase/firestore';
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, Button } from 'react-native';
+import { SPOONACULAR_API_KEY } from 'react-native-dotenv';
 import RecipeCard from './RecipeCard';
+
+// console.log('SPOONACULAR_API_KEY: ', SPOONACULAR_API_KEY);
+
+import { db } from '../core/Config';
 
 const Recipes = () => {
   const [recipes, setRecipes] = useState([]);
 
-  const fridgeItems = ['apples', 'flour', 'sugar'];
-  const fridgeStr = fridgeItems.join(',+');
-  const apiKey = '3b4100511cda452e8720c2da844a1984';
-
-  const getRecipesFromApi = () => {
+  const getRecipesFromApi = (fridgeString) => {
     return fetch(
-      `https://api.spoonacular.com/recipes/findByIngredients?apiKey=${apiKey}&ingredients=${fridgeStr}&number=3&ranking=2`,
+      `https://api.spoonacular.com/recipes/findByIngredients?apiKey=${SPOONACULAR_API_KEY}&ingredients=${fridgeString}&number=3&ranking=2`,
     )
       .then((response) => response.json())
       .catch((error) => console.error(error));
@@ -19,22 +21,40 @@ const Recipes = () => {
 
   const getRecipeFromId = (id) => {
     return fetch(
-      `https://api.spoonacular.com/recipes/${id}/information?apiKey=${apiKey}`,
+      `https://api.spoonacular.com/recipes/${id}/information?apiKey=${SPOONACULAR_API_KEY}`,
     )
       .then((response) => response.json())
       .catch((error) => console.error(error));
   };
+  const getFoodItems = () => {
+    const colRef = collection(db, 'FoodItems');
+    return getDocs(colRef)
+      .then((snapshot) => {
+        const foodItems = [];
+        snapshot.docs.forEach((doc) => {
+          foodItems.push({ ...doc.data(), id: doc.id });
+        });
+        return foodItems;
+      })
+      .catch((err) => {
+        console.log(err.message);
+      });
+  };
 
   useEffect(() => {
-    getRecipesFromApi().then((result) => {
-      for (let i = 0; i < result.length; i++) {
-        getRecipeFromId(result[i].id).then((recipe) => {
-          setRecipes((curr) => {
-            const newArr = [...curr, recipe];
-            return newArr;
+    setRecipes([]);
+    getFoodItems().then((result) => {
+      const fridgeString = result.map((item) => item.food_item).join(',+');
+      getRecipesFromApi(fridgeString).then((r) => {
+        for (let i = 0; i < r.length; i++) {
+          getRecipeFromId(r[i].id).then((recipe) => {
+            setRecipes((curr) => {
+              const newArr = [...curr, recipe];
+              return newArr;
+            });
           });
-        });
-      }
+        }
+      });
     });
   }, []);
 
