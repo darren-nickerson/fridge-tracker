@@ -27,8 +27,8 @@ export default function AddItemFormik() {
   const [handleItemAdded, setHandleItemAdded] = useState('');
 
   const foodSchema = yup.object({
-    food_item: yup.string().required('Please Enter Valid Food Item').max(50),
-    quantity: yup.string().required('Please Enter Number between 1-99').max(2),
+    food_item: yup.string().required('please enter valid food item').max(50),
+    quantity: yup.string().required('please enter number between 1-99').max(2),
   });
   return (
     <Formik
@@ -149,7 +149,9 @@ const AddItem = (props) => {
                 onBlur={handleBlur('food_item')}
               />
 
-              <Text>{touched.food_item && errors.food_item} </Text>
+              <Text style={styles.errorText}>
+                {touched.food_item && errors.food_item}{' '}
+              </Text>
 
               <Text style={styles.input} onPress={showDatePicker}>
                 {moment(expiryDate).format('MMM Do YY')}
@@ -160,6 +162,9 @@ const AddItem = (props) => {
                 onConfirm={handleConfirm}
                 onCancel={hideDatePicker}
               />
+              <Text style={styles.errorText}>
+                {touched.date && errors.quantity}
+              </Text>
 
               <TextInput
                 style={styles.input}
@@ -169,7 +174,9 @@ const AddItem = (props) => {
                 keyboardType="numeric"
                 onBlur={handleBlur('quantity')}
               />
-              <Text>{touched.food_item && errors.quantity} </Text>
+              <Text style={styles.errorText}>
+                {touched.food_item && errors.quantity}{' '}
+              </Text>
 
               <View style={styles.btnBorder}>
                 <TouchableOpacity onPress={handleSubmit} style={styles.btn}>
@@ -190,7 +197,7 @@ const AddItem = (props) => {
 const styles = StyleSheet.create({
   input: {
     height: 40,
-    margin: 12,
+    margin: 10,
     borderWidth: 1,
     padding: 10,
     borderColor: '#009900',
@@ -213,6 +220,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
   addItemText: { textAlign: 'center', marginTop: 25, color: '#009900' },
+  errorText: { color: '#d92626', fontSize: 12, textAlign: 'center' },
 });
 
 // #85b4e0
