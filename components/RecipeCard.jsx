@@ -5,9 +5,6 @@ const RecipeCard = ({ item }) => {
   return (
     <View>
       <Text>{item.title}</Text>
-      <Text onPress={() => Linking.openURL(`${item.sourceUrl}`)}>
-        {item.sourceUrl}
-      </Text>
       <Image
         style={{
           width: 50,
@@ -16,6 +13,7 @@ const RecipeCard = ({ item }) => {
         source={{
           uri: item.image,
         }}
+        onPress={() => Linking.openURL(`${item.sourceUrl}`)}
       />
     </View>
   );
