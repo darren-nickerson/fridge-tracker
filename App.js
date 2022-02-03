@@ -79,16 +79,6 @@ function MyTabs({ barcodeData }) {
           ),
         }}
       />
-      <Tab.Screen
-        name="Recipes"
-        component={Home}
-        options={{
-          tabBarLabel: 'Recipes',
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="reader" color={color} size={size} />
-          ),
-        }}
-      />
     </Tab.Navigator>
   );
 }
