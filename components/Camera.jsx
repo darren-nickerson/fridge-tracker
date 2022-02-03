@@ -15,8 +15,8 @@ import * as Linking from 'expo-linking';
 import * as Clarifai from 'clarifai';
 import { useIsFocused } from '@react-navigation/native';
 import { CLARIFAI_API_KEY } from 'react-native-dotenv';
-import { barcodeContext } from '../context';
 import { FontAwesome, Ionicons } from '@expo/vector-icons';
+import { barcodeContext } from '../context';
 
 export default function App({ navigation }) {
   const [hasPermission, setHasPermission] = useState(null);
@@ -203,14 +203,42 @@ export default function App({ navigation }) {
               <ImageBackground
                 source={{ uri: image }}
                 style={styles.cameraPictureResults}
-              />
+              >
+                <View style={styles.retakeAddManuallyContainerAfterPicture}>
+                  <Pressable
+                    style={styles.reTakeButton}
+                    onPress={() => {
+                      setImage(null);
+                      setIsLoading(true);
+                    }}
+                  >
+                    <Text style={styles.reTakeWord}> 📸 {''} Retake Photo</Text>
+                  </Pressable>
+                  <Pressable
+                    style={styles.addManuallyButton}
+                    onPress={() => {
+                      setImage(null);
+                      Linking.openURL(
+                        `exp://${
+                          Constants.manifest.hostUri.split(':')[0]
+                        }:19000/--/fridge/add`,
+                      );
+                    }}
+                  >
+                    <Text style={styles.addManuallyWord}>
+                      ✏️ {''} Add Manually
+                    </Text>
+                  </Pressable>
+                </View>
+              </ImageBackground>
+              <Text style={styles.optionsTitle}> SELECT YOUR ITEM</Text>
               <View style={styles.predictionContainer}>
                 {predictions.map((item) => {
                   return (
-                    <Button
+                    <Pressable
                       title={item}
                       key={item}
-                      style={styles.button}
+                      style={styles.options}
                       onPress={() => {
                         setImage(null);
                         setBarcodeData(item);
@@ -222,7 +250,9 @@ export default function App({ navigation }) {
                           }:19000/--/fridge/add`,
                         );
                       }}
-                    />
+                    >
+                      <Text style={styles.optionsText}>{item}</Text>
+                    </Pressable>
                   );
                 })}
               </View>
@@ -268,12 +298,11 @@ const styles = StyleSheet.create({
     marginTop: 50,
     height: 40,
     margin: 20,
-    top: 700,
+    top: 500,
   },
 
   predictionContainer: {
     flex: 1,
-    backgroundColor: 'blue',
     flexDirection: 'column',
     marginTop: 20,
   },
@@ -373,5 +402,43 @@ const styles = StyleSheet.create({
   cameraPictureResults: {
     height: 500,
     width: '100%',
+  },
+  options: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 7,
+    elevation: 3,
+    backgroundColor: 'rgb(53, 86, 230)',
+    width: 170,
+    marginBottom: 20,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+  },
+  optionsText: {
+    color: 'white',
+    fontWeight: 'bold',
+  },
+  optionsTitle: {
+    color: 'black',
+    fontWeight: 'bold',
+    fontSize: 26,
+    marginTop: 15,
+    marginBottom: 15,
+  },
+  retakeAddManuallyContainerAfterPicture: {
+    justifyContent: 'space-around',
+    backgroundColor: 'transparent',
+    flexDirection: 'row',
+    marginTop: 50,
+    height: 40,
+    margin: 20,
+    top: 370,
   },
 });
