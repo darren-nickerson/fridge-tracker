@@ -26,7 +26,7 @@ const ItemCard = ({ item, setItemArray }) => {
   const handleConfirm = (newDate) => {
     setExpiryDate(newDate);
     const docRef = doc(db, 'FoodItems', item.id);
-    updateDoc(docRef, { expiration_date: newDate });
+    updateDoc(docRef, { expiration_date: newDate.toISOString() });
     hideDatePicker();
   };
 
