@@ -24,9 +24,9 @@ const ItemCard = ({ item, setItemArray }) => {
   };
 
   const handleConfirm = (newDate) => {
-    setExpiryDate(moment(newDate).format('MMM Do YY'));
+    setExpiryDate(newDate);
     const docRef = doc(db, 'FoodItems', item.id);
-    updateDoc(docRef, { expiration_date: moment(newDate).format('MMM Do YY') });
+    updateDoc(docRef, { expiration_date: newDate.toISOString() });
     hideDatePicker();
   };
 
@@ -40,6 +40,9 @@ const ItemCard = ({ item, setItemArray }) => {
   };
   const handleQuantityPress = (num) => {
     setQuantity((curr) => {
+      if (curr + num < 1) {
+        setModalOpen(true);
+      }
       return curr + num;
     });
 
@@ -66,19 +69,38 @@ const ItemCard = ({ item, setItemArray }) => {
           </Text>
         </TouchableOpacity>
       </View>
-      <Text>{item.food_item}</Text>
-      <Text style={styles.date} onPress={showDatePicker}>
-        {expiryDate}
+
+      <Text numberOfLines={1} style={styles.foodItem}>
+        {item.food_item}
       </Text>
-      <DateTimePickerModal
-        isVisible={isDatePickerVisible}
-        mode="date"
-        onConfirm={handleConfirm}
-        onCancel={hideDatePicker}
-      />
-      <Text onPress={() => setModalOpen(true)}>
-        <MaterialIcons name="delete" size={22} color="#d92626" />
-      </Text>
+
+      <View style={styles.iconContainer}>
+        <View
+          style={[
+            styles.dateBorderGreen,
+            moment(expiryDate).isSame(Date(), 'day')
+              ? styles.dateBorderAmber
+              : moment(expiryDate).isBefore(Date(), 'day')
+              ? styles.dateBorderRed
+              : styles.dateBorderGreen,
+          ]}
+        >
+          <Text style={styles.date} onPress={showDatePicker}>
+            {moment(expiryDate).format('MMM Do YY')}{' '}
+          </Text>
+        </View>
+
+        <DateTimePickerModal
+          isVisible={isDatePickerVisible}
+          mode="date"
+          onConfirm={handleConfirm}
+          onCancel={hideDatePicker}
+        />
+
+        <Text onPress={() => setModalOpen(true)}>
+          <MaterialIcons name="delete" size={22} color="#ec9393" />
+        </Text>
+      </View>
 
       <Modal
         visible={modalOpen}
@@ -87,13 +109,21 @@ const ItemCard = ({ item, setItemArray }) => {
       >
         <View style={styles.modalContainer}>
           <View style={styles.modalInnerContainer}>
-            <Text style={styles.modalDelete} onPress={() => handleDelete()}>
-              Delete
-            </Text>
-
+            <View style={styles.deletebtn}>
+              <Text style={styles.modalDelete} onPress={() => handleDelete()}>
+                Delete
+              </Text>
+            </View>
             <Text
               style={styles.modalCancel}
-              onPress={() => setModalOpen(false)}
+              onPress={() => {
+                setModalOpen(false);
+                if (quantity === 0) {
+                  setQuantity((curr) => {
+                    return curr + 1;
+                  });
+                }
+              }}
             >
               Cancel
             </Text>
@@ -107,11 +137,12 @@ const ItemCard = ({ item, setItemArray }) => {
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
     backgroundColor: 'white',
     padding: 1,
     paddingHorizontal: 7,
     alignItems: 'center',
-    justifyContent: 'space-between',
     margin: 10,
     borderRadius: 5,
     borderWidth: 1,
@@ -136,12 +167,18 @@ const styles = StyleSheet.create({
   },
   date: {
     padding: 3,
-    paddingHorizontal: 10,
+    paddingHorizontal: 7,
     color: 'white',
-    borderRadius: 5,
     fontSize: 10,
     fontWeight: 'bold',
+  },
+  dateBorder: {
+    borderRadius: 3,
+    borderWidth: 1,
+    borderColor: '#009900',
     backgroundColor: '#009900',
+    textAlign: 'center',
+    marginRight: 6,
   },
   modalContent: {
     justifyContent: 'center',
@@ -158,13 +195,17 @@ const styles = StyleSheet.create({
     width: 200,
     height: 200,
   },
+  deletebtn: {
+    borderColor: '#d92626',
+    borderWidth: 1,
+    borderRadius: 5,
+    marginBottom: 20,
+  },
   modalDelete: {
     backgroundColor: '#d92626',
     padding: 10,
     textAlign: 'center',
-    marginBottom: 20,
     color: 'white',
-    borderRadius: 5,
   },
   modalCancel: {
     backgroundColor: 'white',
@@ -175,6 +216,42 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginBottom: 20,
     color: 'black',
+  },
+  iconContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    right: 0,
+    textAlign: 'right',
+    marginLeft: 10,
+  },
+  foodItem: {
+    marginLeft: 15,
+    flex: 3,
+  },
+
+  dateBorderRed: {
+    borderRadius: 3,
+    borderWidth: 1,
+    borderColor: '#d92626',
+    backgroundColor: '#d92626',
+    textAlign: 'center',
+    marginRight: 6,
+  },
+  dateBorderGreen: {
+    borderRadius: 3,
+    borderWidth: 1,
+    borderColor: '#009900',
+    backgroundColor: '#009900',
+    textAlign: 'center',
+    marginRight: 6,
+  },
+  dateBorderAmber: {
+    borderRadius: 3,
+    borderWidth: 1,
+    borderColor: '#cc9900',
+    backgroundColor: '#cc9900',
+    textAlign: 'center',
+    marginRight: 6,
   },
 });
 

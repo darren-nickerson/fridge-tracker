@@ -20,11 +20,9 @@ import Constants from 'expo-constants';
 import * as Notifications from 'expo-notifications';
 import * as Linking from 'expo-linking';
 import moment from 'moment';
-
 import { getDocs, collection } from 'firebase/firestore';
 import { Alert, Platform, Text, StyleSheet } from 'react-native';
 import { db } from './core/Config';
-
 import { barcodeContext, itemContext } from './context';
 import Camera from './components/Camera';
 import AddItemFormik from './components/AddItemFormik';
@@ -79,16 +77,6 @@ function MyTabs({ barcodeData }) {
           tabBarLabel: 'Camera',
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="camera" color={color} size={size} />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="Recipes"
-        component={Recipes}
-        options={{
-          tabBarLabel: 'Recipes',
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="reader" color={color} size={size} />
           ),
         }}
       />
