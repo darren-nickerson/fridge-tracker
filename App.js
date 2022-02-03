@@ -1,3 +1,4 @@
+/* eslint-disable quotes */
 /* eslint-disable function-paren-newline */
 /* eslint-disable no-shadow */
 /* eslint-disable no-plusplus */
@@ -134,10 +135,13 @@ export default function App() {
   useEffect(() => {
     getFoodItems().then((result) => {
       for (let i = 0; i < result.length; i++) {
-        if (result[i].expiration_date === moment().format('MMM Do YY')) {
+        if (
+          moment(result[i].expiration_date).format('MMM Do YY') ===
+          moment().format('MMM Do YY')
+        ) {
           schedulePushNotification({
             title: `${result[i].food_item} is expiring today!`,
-            body: '🍽️ 🍳 🥧🍕🍔🌮🍣 😃😃😃😃😃😃',
+            body: `🍽️ Let's get cooking!🍳`,
             data: {
               url: `exp://${pathwayURL}:19000/--/fridge/list`,
             },
