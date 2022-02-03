@@ -24,9 +24,9 @@ const ItemCard = ({ item, setItemArray }) => {
   };
 
   const handleConfirm = (newDate) => {
-    setExpiryDate(moment(newDate).format('MMM Do YY'));
+    setExpiryDate(newDate);
     const docRef = doc(db, 'FoodItems', item.id);
-    updateDoc(docRef, { expiration_date: expiryDate });
+    updateDoc(docRef, { expiration_date: newDate });
     hideDatePicker();
   };
 
@@ -75,28 +75,20 @@ const ItemCard = ({ item, setItemArray }) => {
       </Text>
 
       <View style={styles.iconContainer}>
-        {moment(expiryDate).isBefore(Date(), 'day') && (
-          <View style={styles.dateBorderRed}>
-            <Text style={styles.date} onPress={showDatePicker}>
-              {moment(expiryDate).format('MMM Do YY')}{' '}
-            </Text>
-          </View>
-        )}
-
-        {moment(expiryDate).isSame(Date(), 'day') && (
-          <View style={styles.dateBorderAmber}>
-            <Text style={styles.date} onPress={showDatePicker}>
-              {moment(expiryDate).format('MMM Do YY')}{' '}
-            </Text>
-          </View>
-        )}
-        {moment(expiryDate).isAfter(Date(), 'day') && (
-          <View style={styles.dateBorderGreen}>
-            <Text style={styles.date} onPress={showDatePicker}>
-              {moment(expiryDate).format('MMM Do YY')}
-            </Text>
-          </View>
-        )}
+        <View
+          style={[
+            styles.dateBorderGreen,
+            moment(expiryDate).isSame(Date(), 'day')
+              ? styles.dateBorderAmber
+              : moment(expiryDate).isBefore(Date(), 'day')
+              ? styles.dateBorderRed
+              : styles.dateBorderGreen,
+          ]}
+        >
+          <Text style={styles.date} onPress={showDatePicker}>
+            {moment(expiryDate).format('MMM Do YY')}{' '}
+          </Text>
+        </View>
 
         <DateTimePickerModal
           isVisible={isDatePickerVisible}
