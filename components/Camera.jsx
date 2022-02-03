@@ -16,7 +16,7 @@ import * as Clarifai from 'clarifai';
 import { useIsFocused } from '@react-navigation/native';
 import { CLARIFAI_API_KEY } from 'react-native-dotenv';
 import { barcodeContext } from '../context';
-import { FontAwesome } from '@expo/vector-icons';
+import { FontAwesome, Ionicons } from '@expo/vector-icons';
 
 export default function App({ navigation }) {
   const [hasPermission, setHasPermission] = useState(null);
@@ -134,12 +134,14 @@ export default function App({ navigation }) {
               </View>
               <View style={styles.buttonContainer}>
                 {scanned && (
-                  <Button
-                    style={styles.button}
+                  <Pressable
+                    style={styles.scanAgainButton}
                     color="blue"
-                    title="Scan Again"
                     onPress={() => setScanned(false)}
-                  />
+                  >
+                    <Ionicons name="barcode-sharp" size={40} color="white" />
+                    <Text style={styles.barcodeText}>Scan Again</Text>
+                  </Pressable>
                 )}
                 <FontAwesome
                   name="close"
@@ -172,11 +174,10 @@ export default function App({ navigation }) {
                       setIsLoading(true);
                     }}
                   >
-                    <Text style={styles.reTakeWord}>ReTake</Text>
+                    <Text style={styles.reTakeWord}> 📸 {''} Retake Photo</Text>
                   </Pressable>
-                  <Button
-                    title="Add manually"
-                    style={styles.button}
+                  <Pressable
+                    style={styles.addManuallyButton}
                     onPress={() => {
                       setImage(null);
                       Linking.openURL(
@@ -185,7 +186,11 @@ export default function App({ navigation }) {
                         }:19000/--/fridge/add`,
                       );
                     }}
-                  />
+                  >
+                    <Text style={styles.addManuallyWord}>
+                      ✏️ {''} Add Manually
+                    </Text>
+                  </Pressable>
                 </View>
                 <View style={styles.loadingWheel}>
                   <ActivityIndicator size={'large'} color="#000000" />
@@ -248,9 +253,9 @@ const styles = StyleSheet.create({
   },
 
   buttonContainer: {
-    alignItems: 'flex-end',
+    justifyContent: 'space-between',
     backgroundColor: 'transparent',
-    flexDirection: 'column',
+    flexDirection: 'row',
     marginTop: 50,
     height: 40,
     marginRight: 20,
@@ -263,6 +268,7 @@ const styles = StyleSheet.create({
     marginTop: 50,
     height: 40,
     margin: 20,
+    top: 700,
   },
 
   predictionContainer: {
@@ -273,10 +279,11 @@ const styles = StyleSheet.create({
   },
 
   cancelButton: {
-    alignSelf: 'flex-end',
+    top: 0,
+    right: 0,
+    position: 'absolute',
   },
 
-  button: {},
   text: {
     fontSize: 30,
     color: 'white',
@@ -306,27 +313,65 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     left: 0,
     right: 0,
-    top: 0,
+    top: 300,
     bottom: 0,
-    justifyContent: 'center',
   },
 
   reTakeButton: {
     alignItems: 'center',
     justifyContent: 'center',
     paddingVertical: 12,
-    paddingHorizontal: 32,
-    borderRadius: 4,
+    paddingHorizontal: 20,
+    borderRadius: 7,
     elevation: 3,
-    backgroundColor: 'black',
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    width: 170,
+  },
+
+  scanAgainButton: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    alignContent: 'center',
+    paddingVertical: 5,
+    paddingHorizontal: 2,
+    borderRadius: 7,
+    elevation: 3,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    width: 100,
+    top: 0,
+    left: 20,
+    position: 'absolute',
+  },
+
+  addManuallyButton: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 7,
+    elevation: 3,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    width: 170,
   },
 
   reTakeWord: {
     color: 'white',
+    fontWeight: 'bold',
+  },
+
+  addManuallyWord: {
+    color: 'white',
+    fontWeight: 'bold',
+  },
+
+  barcodeText: {
+    color: 'white',
+    fontWeight: 'bold',
+    textAlignVertical: 'center',
   },
 
   cameraPictureResults: {
-    height: '50%',
+    height: 500,
     width: '100%',
   },
 });
