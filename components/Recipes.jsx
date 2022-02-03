@@ -1,10 +1,7 @@
-import { getDocs, collection } from 'firebase/firestore';
-import React, { useEffect, useState, useContext } from 'react';
-import { Text, View, FlatList, StyleSheet } from 'react-native';
+import React, { useState } from 'react';
+import { View, FlatList, StyleSheet } from 'react-native';
 import { SPOONACULAR_API_KEY } from 'react-native-dotenv';
 import RecipeCard from './RecipeCard';
-import { itemContext } from '../context';
-import { db } from '../core/Config';
 
 console.log('SPOONACULAR_API_KEY: ', SPOONACULAR_API_KEY);
 
