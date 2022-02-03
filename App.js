@@ -26,7 +26,7 @@ import { db } from './core/Config';
 import { barcodeContext, itemContext } from './context';
 import Camera from './components/Camera';
 import AddItemFormik from './components/AddItemFormik';
-import Home from './components/Home';
+import Recipes from './components/Recipes';
 import FridgeNavigator from './navigation/FridgeNavigator';
 
 Notifications.setNotificationHandler({
@@ -73,6 +73,7 @@ function MyTabs({ barcodeData }) {
         name="Camera"
         component={Camera}
         options={{
+          headerShown: false,
           tabBarLabel: 'Camera',
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="camera" color={color} size={size} />
